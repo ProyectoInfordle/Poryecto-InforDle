@@ -17,9 +17,9 @@
     <nav class="navbar">
       <a href="#home">Home</a>
       <a href="#Informacion">Informacion</a>
-      <a href="#skills">Raking</a>
-      <a href="#projects">contactos</a>
-      <a href="#contact">credito</a>
+      <a href="#Raking">Raking</a>
+      <a href="#Conctatos">contactos</a>
+      <a href="#creditos">credito</a>
     </nav>
   </header>
 
@@ -34,19 +34,39 @@
 
   <section class="Informacion" id="Informacion">
     <div class="info-content">
-        <h2>Sobre<span>me</span></h2>
-        <p>Soy un chico de 17 años que vive normal, me gusta dibujar, hacer paginas y mejorar en los diseños de estas mismas,
-        tengo 2 hermanos menores, anque no me valla bien en las materias tengo una complejidad de mejorar rapidamente estas 
-        </p>
-            <a href="#home" class="btn">Home</a>
+      <h2>Sobre <span>InforDle</span></h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem praesentium ab dolores dignissimos
+        quaerat, ipsum reprehenderit consequatur aut. Dignissimos repudiandae saepe et placeat reiciendis obcaecati
+        ipsum fugit aliquam consequuntur ex!
+      </p>
     </div>
-</section>
+  </section>
 
+  <section class="Raking" id="Raking">
+    <div class="Raking-content">
+      <h2>Esta parte esta en <span> Mantenimiento</span></h2>
+      <h1>Polar ya se va a ocupar</h1>
+    </div>
+  </section>
+
+  <section class="Conctatos" id="Conctatos">
+    <div class="Conctatos-1">
+        <h2>Soporte</h2>
+        <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores fuga voluptate quasi doloremque
+            voluptatem consequuntur nisi commodi illum quibusdam sapiente, eum laborum repellat nam numquam, dolor
+            culpa quos inventore soluta?
+        </p>
+        <a href="" class="btn-4">Soporte</a>
+    </div>
+        <div class="Conctatos-2"></div> 
+</section>
 
   <script src="script.js"></script>
   <script>
     let idActual = 1;
     let idgif = 2;
+    let idMantenimiento = 3;
 
     function cargarImagen(id, elementId) {
       fetch(`/img/${id}`)
@@ -71,10 +91,13 @@
     }
 
     cargarImagen(idActual, 'home-image');
-    cargarImagen(idgif, 'gif')
+    cargarImagen(idgif, 'gif');
+    cargarImagen(idMantenimiento, 'Mantenimiento');
 
   </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script src="Scrollbar.js"></script>
 
 </body>
 

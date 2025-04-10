@@ -8,6 +8,7 @@ app.use(express.static(path.join(__dirname, "paginas",)));
 const img = [
     { id: 1, imagenes1: 'img/descarga.png' },
     { id: 2, imagenes1: 'img/fondo.gif' },
+    { id:  3, imagenes1: 'img/img2.png'},
 ];
 
 app.get('/img/:id', (req, res) => {

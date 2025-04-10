@@ -24,8 +24,7 @@ function deletePhrase(spanElement, phrase, index = phrase.length - 1, callback) 
         index--;
         setTimeout(() => deletePhrase(spanElement, phrase, index, callback), 50); // Velocidad de borrado
     } else {
-        // Cuando termine de borrar, pasamos a la siguiente frase
-        setTimeout(callback, 500); // Pausa de 0.5 segundos antes de escribir la siguiente frase
+        setTimeout(callback, 500);
     }
 }
 
