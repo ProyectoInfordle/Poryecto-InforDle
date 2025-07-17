@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear publicación</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <a href="create.html">Nueva publicación</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- aquí irá el usuario o el botón de login -->
+  </div>
+</nav>
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">🔷 RedSocial</a>
+    <a href="index.html"><i data-lucide="home"></i> Inicio</a>
+    <a href="create.html"><i data-lucide="plus-circle"></i> Publicar</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- Aquí va el usuario o login -->
+  </div>
+</nav>
+
+
+
+
+
+<body>
+    <!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">🔷 RedSocial</a>
+    <a href="index.html"><i data-lucide="home"></i> Inicio</a>
+    <a href="create.html"><i data-lucide="plus-circle"></i> Publicar</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- Aquí va el usuario o login -->
+  </div>
+</nav>
+
+<script>
+  lucide.createIcons(); // renderiza los iconos
+
+  const navRight = document.getElementById('navRight');
+  const username = localStorage.getItem('username');
+  if (username) {
+    navRight.innerHTML = `
+      <span>👤 ${username}</span>
+      <button onclick="logout()">Cerrar sesión</button>
+    `;
+  } else {
+    navRight.innerHTML = `<a href="login.html">Iniciar sesión</a>`;
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+  }
+</script>
+
+  <h1>Crear nueva publicación</h1>
+  <form id="postForm">
+    <input name="user" placeholder="Tu nombre" required>
+    <textarea name="text" placeholder="Escribe algo..." required></textarea>
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Publicar</button>
+  </form>
+  <a href="index.html">Volver</a>
+
+  <script>
+    document.getElementById('postForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        alert('¡Publicado!');
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+  <!-- Antes del formulario -->
+<script>
+  if (!localStorage.getItem('token')) {
+    alert('Debes iniciar sesión para crear una publicación');
+    window.location.href = 'login.html';
+  }
+</script>
+
+<!-- Dentro de <form> -->
+<input name="user" id="username" readonly required>
+
+<script>
+  // Al cargar el formulario, llenar el nombre
+  document.getElementById('username').value = localStorage.getItem('username') || '';
+</script>
+
+</body>
+</html>

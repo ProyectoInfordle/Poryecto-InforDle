@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <a href="create.html">Nueva publicación</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- aquí irá el usuario o el botón de login -->
+  </div>
+</nav>
+
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">🔷 RedSocial</a>
+    <a href="index.html"><i data-lucide="home"></i> Inicio</a>
+    <a href="create.html"><i data-lucide="plus-circle"></i> Publicar</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- Aquí va el usuario o login -->
+  </div>
+</nav>
+
+<body>
+    <!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">🔷 RedSocial</a>
+    <a href="index.html"><i data-lucide="home"></i> Inicio</a>
+    <a href="create.html"><i data-lucide="plus-circle"></i> Publicar</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <!-- Aquí va el usuario o login -->
+  </div>
+</nav>
+
+<script>
+  lucide.createIcons(); // renderiza los iconos
+
+  const navRight = document.getElementById('navRight');
+  const username = localStorage.getItem('username');
+  if (username) {
+    navRight.innerHTML = `
+      <span>👤 ${username}</span>
+      <button onclick="logout()">Cerrar sesión</button>
+    `;
+  } else {
+    navRight.innerHTML = `<a href="login.html">Iniciar sesión</a>`;
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+  }
+</script>
+
+  <h1>Registrarse</h1>
+  <form id="registerForm">
+    <input name="username" placeholder="Nombre de usuario" required>
+    <input name="email" type="email" placeholder="Correo electrónico" required>
+    <input name="password" type="password" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+  </form>
+  <a href="login.html">Ya tienes cuenta? Inicia sesión</a>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const data = Object.fromEntries(form.entries());
+
+      const res = await fetch('/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        window.location.href = 'login.html';
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Error al registrar');
+      }
+    });
+  </script>
+</body>
+</html>
