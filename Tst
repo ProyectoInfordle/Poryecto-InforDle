@@ -1,269 +1,439 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Perfil de Usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil con Backend</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
+    /* Aquí va el CSS que ya tenías para diseño y popup */
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    header {
-      background-color: #2b2d42;
-      color: white;
-      padding: 1rem;
-      text-align: center;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     nav {
+      background: #005f73;
+      color: white;
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-around;
-      background-color: #8d99ae;
-      padding: 0.8rem;
+      gap: 1.5rem;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
     }
 
-    nav a:last-of-type {
-      background-color: #ae2012;
-      padding: 0.4rem 0.7rem;
-      border-radius: 6px;
+    nav a:hover {
+      background: #0a9396;
     }
 
-    nav a:last-of-type:hover {
-      background-color: #9b1d10;
+    nav .menu-left {
+      flex-grow: 1;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav .menu-right {
+      font-size: 0.9rem;
+      font-style: italic;
     }
 
     main {
+      flex-grow: 1;
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
       padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
       text-align: center;
     }
 
-    #avatar img {
+    .profile {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
       width: 120px;
       height: 120px;
-      object-fit: cover;
       border-radius: 50%;
-      border: 3px solid #333;
-    }
-
-    #profile-desc {
-      margin-top: 1rem;
-      font-size: 1.1rem;
-      color: #444;
-      background-color: #e0f7fa;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: inline-block;
-      max-width: 500px;
-    }
-
-    #edit-profile-btn {
-      margin-top: 1.5rem;
-      background-color: #2b2d42;
+      background: #94d2bd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
       color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a9396;
+    }
+
+    .welcome-msg {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 1rem;
+      max-width: 350px;
+      word-wrap: break-word;
+      /* Agregado para mejorar apariencia */
+      padding: 0.5rem 1rem;
+      border: 1px solid #0a9396;
+      border-radius: 8px;
+      background: #e0f7f7;
+    }
+
+    /* Popup Overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: opacity 0.3s ease;
+    }
+    .popup-overlay.hidden {
+      display: none;
+    }
+
+    /* Popup Box */
+    .popup {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      animation: popup-fadein 0.4s ease;
+      max-width: 90%;
+      width: 350px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+    }
+
+    @keyframes popup-fadein {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    input[type="file"] {
+      padding: 0.3rem 0;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.5rem;
       border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #0a9396;
+      border: none;
+      padding: 0.7rem;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
-    #edit-profile-btn:hover {
-      background-color: #1f2233;
+    button:hover {
+      background: #007f7f;
     }
 
-    #popup-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+    .cancel-btn {
+      background: #a3a3a3;
+      margin-top: 0.5rem;
+    }
+    .cancel-btn:hover {
+      background: #7a7a7a;
     }
 
-    .popup-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-
-    .popup-content input,
-    .popup-content textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-    }
-
-    .popup-content button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      border: none;
+    /* Botón cerrar sesión */
+    #logout-btn {
+      margin-left: 10px;
+      padding: 0.3rem 0.6rem;
+      background-color: #c0392b;
+      border-radius: 4px;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    #logout-btn:hover {
+      background-color: #e74c3c;
     }
 
-    #save-btn {
-      background-color: #2b9348;
-      color: white;
-    }
-
-    #cancel-btn {
-      background-color: #aaa;
-      color: white;
-      margin-left: 1rem;
-    }
-
-    .hidden {
+    /* Spinner carga imagen */
+    #loading-spinner {
       display: none;
+      margin-top: 10px;
+      color: #0a9396;
+      font-weight: 600;
+      font-style: italic;
     }
+
+    /* Popup pequeño éxito */
+    #popup-success {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00b894;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 9999;
+      animation: fadeInOut 2s ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 30px); }
+      10% { opacity: 1; transform: translate(-50%, 0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, 30px); }
+    }
+
   </style>
 </head>
 <body>
-  <header>
-    <h1>Bienvenido, <span id="username-display"></span></h1>
-  </header>
-
   <nav>
-    <a href="#">Inicio</a>
-    <a href="#">Configuración</a>
-    <a href="#">Cerrar sesión</a>
+    <div class="menu-left">
+      <a href="#">Inicio</a>
+      <a href="#">Perfil</a>
+      <a href="#">Configuración</a>
+      <a href="#" id="edit-profile-btn">Editar Perfil</a>
+      <a href="#" id="logout-btn">Cerrar sesión</a>
+    </div>
+    <div class="menu-right">
+      Logeado como <strong id="username-display">...</strong>
+    </div>
   </nav>
 
   <main>
-    <div id="avatar">👤</div>
-    <h2 id="profile-name">Nombre del usuario</h2>
-    <p id="profile-desc" class="welcome-msg">Bienvenido a tu perfil</p>
-    <br/>
-    <button id="edit-profile-btn">Editar perfil</button>
+    <h1>¡Test Completo!</h1>
+    <p>Has sido registrado exitosamente.</p>
+
+    <section class="profile">
+      <div class="avatar" aria-label="Avatar Usuario" id="avatar">
+        👤
+      </div>
+      <div class="profile-name" id="profile-name">...</div>
+      <div class="welcome-msg" id="profile-desc">
+        Bienvenido a tu perfil
+      </div>
+    </section>
   </main>
 
-  <!-- Popup -->
-  <div id="popup-overlay" class="hidden">
-    <div class="popup-content">
+  <div id="loading-spinner">Cargando imagen...</div>
+
+  <div class="popup-overlay hidden" id="popup-overlay">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <h2 id="popup-title">Editar Perfil</h2>
       <form id="profile-form">
-        <label for="desc-input">Descripción:</label>
-        <textarea id="desc-input" name="description" rows="3" placeholder="Escribe algo sobre ti..."></textarea>
-        <label for="avatar-upload">Cambiar avatar:</label>
-        <input type="file" id="avatar-upload" name="avatar" accept="image/*" />
-        <div>
-          <button type="submit" id="save-btn">Guardar</button>
-          <button type="button" id="cancel-btn">Cancelar</button>
-        </div>
+        <label for="avatar-upload">Subir imagen de avatar:</label>
+        <input type="file" id="avatar-upload" accept="image/*" />
+        
+        <label for="desc-input">Cambiar descripción:</label>
+        <textarea id="desc-input" maxlength="200" placeholder="Escribe una descripción..."></textarea>
+        
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" class="cancel-btn" id="cancel-btn">Cancelar</button>
       </form>
     </div>
   </div>
 
+  <div id="popup-success">Perfil actualizado correctamente</div>
+
   <script>
-    function showPopup() {
-      document.getElementById('popup-overlay').classList.remove('hidden');
-    }
-
-    function hidePopup() {
-      document.getElementById('popup-overlay').classList.add('hidden');
-    }
-
     async function fetchLoggedUser() {
-      const res = await fetch('http://localhost:3000/api/auth/user');
-      if (!res.ok) throw new Error('No logueado');
-      const data = await res.json();
-      if (!data.success) throw new Error('Sesión inválida');
-      return data.username;
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/user');
+        if (!res.ok) throw new Error('No hay usuario logueado');
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Error obteniendo usuario');
+        return data.username;
+      } catch (e) {
+        alert('Debes iniciar sesión');
+        throw e;
+      }
     }
 
     async function loadProfile(username) {
-      const res = await fetch(`http://localhost:3000/api/profile/${username}`);
-      if (!res.ok) throw new Error('No se pudo cargar perfil');
-      const data = await res.json();
-      return data;
+      try {
+        const res = await fetch(`http://localhost:3000/api/profile/${username}`);
+        if (!res.ok) throw new Error('No se pudo cargar el perfil');
+        const data = await res.json();
+        return data;
+      } catch (e) {
+        alert('Error al cargar perfil: ' + e.message);
+        throw e;
+      }
     }
+
+    function showPopupSuccess(msg = 'Perfil actualizado correctamente') {
+      const popup = document.getElementById('popup-success');
+      popup.textContent = msg;
+      popup.style.display = 'block';
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 2000);
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      // Limpia sesión y recarga página
+      localStorage.clear();
+      location.reload();
+    });
 
     async function main() {
       try {
         const loggedUser = await fetchLoggedUser();
+
         document.getElementById('username-display').textContent = loggedUser;
         document.getElementById('profile-name').textContent = loggedUser;
 
-        const profile = await loadProfile(loggedUser);
+        const profileData = await loadProfile(loggedUser);
+
         const descDiv = document.getElementById('profile-desc');
         const avatarDiv = document.getElementById('avatar');
+        const popupOverlay = document.getElementById('popup-overlay');
+        const editBtn = document.getElementById('edit-profile-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const profileForm = document.getElementById('profile-form');
+        const descInput = document.getElementById('desc-input');
+        const fileInput = document.getElementById('avatar-upload');
+        const loadingSpinner = document.getElementById('loading-spinner');
 
-        descDiv.textContent = profile.description || 'Bienvenido a tu perfil';
-        if (profile.avatar) {
-          avatarDiv.innerHTML = `<img src="${profile.avatar}" alt="Avatar" />`;
+        descDiv.textContent = profileData.description || 'Bienvenido a tu perfil';
+
+        if (profileData.avatar) {
+          avatarDiv.innerHTML = `<img src="${profileData.avatar}" alt="Avatar Usuario" />`;
         } else {
           avatarDiv.textContent = '👤';
         }
 
-        document.getElementById('edit-profile-btn').addEventListener('click', () => {
-          document.getElementById('desc-input').value = descDiv.textContent;
-          showPopup();
-        });
-
-        document.getElementById('cancel-btn').addEventListener('click', hidePopup);
-        document.getElementById('popup-overlay').addEventListener('click', (e) => {
-          if (e.target === document.getElementById('popup-overlay')) hidePopup();
-        });
-
-        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        editBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          const desc = document.getElementById('desc-input').value;
-          const file = document.getElementById('avatar-upload').files[0];
+          descInput.value = descDiv.textContent;
+          popupOverlay.classList.remove('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+          popupOverlay.classList.add('hidden');
+        });
+
+        popupOverlay.addEventListener('click', (e) => {
+          if (e.target === popupOverlay) popupOverlay.classList.add('hidden');
+        });
+
+        profileForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const description = descInput.value.trim();
           const formData = new FormData();
-          formData.append('description', desc);
-          if (file) formData.append('avatar', file);
+          formData.append('description', description);
+          if (fileInput.files[0]) formData.append('avatar', fileInput.files[0]);
+
+          loadingSpinner.style.display = 'block';
 
           try {
             const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
               method: 'POST',
-              body: formData
+              body: formData,
             });
             const data = await res.json();
-            if (!data.success) throw new Error(data.message);
 
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                avatarDiv.innerHTML = 'Cargando...';
-                setTimeout(() => {
-                  avatarDiv.innerHTML = `<img src="${e.target.result}" alt="Avatar" />`;
-                }, 2000);
-              };
-              reader.readAsDataURL(file);
-            }
+            if (!res.ok || !data.success) throw new Error(data.message || 'Error al guardar perfil');
 
-            descDiv.textContent = desc || 'Bienvenido a tu perfil';
-            hidePopup();
+            // Simular carga 2s
+            setTimeout(() => {
+              loadingSpinner.style.display = 'none';
+
+              if (fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  avatarDiv.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" />`;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+              }
+
+              descDiv.textContent = description || 'Bienvenido a tu perfil';
+              popupOverlay.classList.add('hidden');
+              fileInput.value = '';
+
+              showPopupSuccess();
+            }, 2000);
+
           } catch (err) {
-            alert('Error: ' + err.message);
+            loadingSpinner.style.display = 'none';
+            alert('No se pudo guardar el perfil: ' + err.message);
+            console.error(err);
           }
         });
 
-        // Cerrar sesión
-        document.querySelectorAll('nav a')[2].addEventListener('click', async (e) => {
-          e.preventDefault();
-          await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
-          window.location.href = 'index.html';
-        });
-
       } catch (err) {
-        alert('Debes iniciar sesión');
-        window.location.href = 'index.html';
+        console.error('Error en la carga inicial:', err);
       }
     }
 
