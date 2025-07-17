@@ -1,48 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Perfil de Usuario</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil</title>
   <style>
     body {
-      background-color: #121212;
+      background: #121212;
       color: white;
       font-family: Arial, sans-serif;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #e63946;
     }
 
     #avatar {
-      width: 150px;
-      height: 150px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
-      margin-top: 20px;
-      border: 3px solid crimson;
       object-fit: cover;
+      border: 3px solid #e63946;
+      margin-bottom: 20px;
     }
 
-    #descriptionInput {
-      width: 60%;
-      padding: 10px;
+    #description {
       margin-top: 10px;
+      padding: 10px;
       border-radius: 10px;
-      border: none;
-      font-size: 16px;
+      width: 90%;
+      max-width: 400px;
+      height: 100px;
+      border: 1px solid #ccc;
+      background: #1e1e1e;
+      color: white;
     }
 
-    #profileForm button, #logoutBtn {
-      background-color: crimson;
+    #save-profile {
+      padding: 10px 20px;
+      background: #e63946;
       color: white;
       border: none;
-      padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-weight: bold;
       margin-top: 15px;
-      transition: background-color 0.3s ease;
     }
 
-    #profileForm button:hover, #logoutBtn:hover {
-      background-color: #e60000;
+    #image-upload {
+      margin-top: 15px;
+    }
+
+    #uploading-msg {
+      display: none;
+      color: #ccc;
+      margin-top: 10px;
     }
 
     #popup-modal {
@@ -51,129 +67,117 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: rgba(30, 30, 30, 0.95);
+      background: #222;
       color: white;
       padding: 20px 30px;
       border-radius: 12px;
-      box-shadow: 0 0 20px black;
-      z-index: 9999;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    #loading {
-      display: none;
-      color: crimson;
-      font-weight: bold;
-      margin-top: 10px;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.2; }
-      50% { opacity: 1; }
-      100% { opacity: 0.2; }
+      z-index: 999;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <h1>Bienvenido, <span id="username"></span></h1>
-  <img id="avatar" src="" alt="Avatar de perfil"><br>
+  <h1>Tu Perfil</h1>
 
-  <form id="profileForm">
-    <input type="file" id="avatarInput" name="avatar"><br>
-    <textarea id="descriptionInput" name="descripcion" placeholder="Escribe tu descripción..."></textarea><br>
-    <button type="submit">Guardar perfil</button>
-  </form>
+  <img id="avatar" src="default-avatar.png" alt="Avatar" />
 
-  <p id="loading">Subiendo imagen...</p>
-  <p id="descriptionText"></p>
+  <input type="file" id="image-upload" accept="image/*" />
+  <div id="uploading-msg">Subiendo imagen...</div>
 
-  <button id="logoutBtn">Cerrar sesión</button>
+  <textarea id="description" placeholder="Escribe algo sobre ti..."></textarea>
+  <button id="save-profile">Guardar perfil</button>
 
-  <div id="popup-modal"></div>
+  <div id="popup-modal">
+    <p id="popup-text"></p>
+  </div>
 
   <script>
+    const backendURL = 'http://localhost:3000';
     const username = localStorage.getItem('username');
+
     if (!username) {
       window.location.href = 'index.html';
     }
 
-    document.getElementById('username').textContent = username;
-
-    const avatar = document.getElementById('avatar');
-    const descriptionText = document.getElementById('descriptionText');
-    const descriptionInput = document.getElementById('descriptionInput');
-    const popupModal = document.getElementById('popup-modal');
-    const loading = document.getElementById('loading');
-
-    // Obtener perfil
-    fetch(`http://localhost:3000/api/profile/${username}`)
+    // Cargar perfil existente
+    fetch(`${backendURL}/api/profile/${username}`)
       .then(res => res.json())
       .then(data => {
-        if (data.avatar) avatar.src = data.avatar;
-        if (data.description) {
-          descriptionText.textContent = `Descripción: ${data.description}`;
-          descriptionInput.value = data.description;
+        if (data.success) {
+          if (data.profile.avatar) {
+            document.getElementById('avatar').src = `${backendURL}/uploads/${data.profile.avatar}`;
+          }
+          document.getElementById('description').value = data.profile.description || '';
         }
       });
 
-    // Guardar perfil
-    document.getElementById('profileForm').addEventListener('submit', (e) => {
-      e.preventDefault();
+    // Subir imagen con animación 2s
+    document.getElementById('image-upload').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const uploadingMsg = document.getElementById('uploading-msg');
+      uploadingMsg.style.display = 'block';
 
       const formData = new FormData();
-      const file = document.getElementById('avatarInput').files[0];
-      const desc = descriptionInput.value;
+      formData.append('image', file);
+      formData.append('username', username);
 
-      if (file) formData.append('avatar', file);
-      if (desc) formData.append('descripcion', desc);
+      setTimeout(() => {
+        fetch(`${backendURL}/api/profile/image`, {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          uploadingMsg.style.display = 'none';
+          if (data.success) {
+            showPopup("Imagen subida correctamente");
+            document.getElementById('avatar').src = `${backendURL}/uploads/${data.filename}?t=${Date.now()}`;
+          } else {
+            showPopup("Error al subir imagen");
+          }
+        })
+        .catch(() => {
+          uploadingMsg.style.display = 'none';
+          showPopup("Error al conectar");
+        });
+      }, 2000);
+    });
 
-      loading.style.display = 'block';
-
-      fetch(`http://localhost:3000/api/profile/${username}`, {
-        method: 'POST',
-        body: formData
+    // Guardar descripción
+    document.getElementById('save-profile').addEventListener('click', () => {
+      const description = document.getElementById('description').value;
+      fetch(`${backendURL}/api/profile/${username}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ description })
       })
       .then(res => res.json())
       .then(data => {
-        setTimeout(() => {
-          loading.style.display = 'none';
-          showPopup(data.message || 'Perfil actualizado');
-          location.reload();
-        }, 2000); // Animación de carga 2 segundos
-      })
-      .catch(() => {
-        loading.style.display = 'none';
-        showPopup('Error al guardar perfil');
+        if (data.success) {
+          showPopup("Perfil guardado con éxito");
+        } else {
+          showPopup("No se pudo guardar");
+        }
       });
     });
 
-    // Cerrar sesión
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('username');
-      window.location.href = 'index.html';
-    });
-
-    // Popup animado
+    // Mostrar popup
     function showPopup(message) {
-      popupModal.textContent = message;
-      popupModal.style.display = 'block';
+      const popup = document.getElementById('popup-modal');
+      const popupText = document.getElementById('popup-text');
+
+      popupText.textContent = message;
+      popup.style.display = 'block';
 
       setTimeout(() => {
-        popupModal.style.display = 'none';
-      }, 3000);
+        popup.style.display = 'none';
+      }, 2500);
     }
   </script>
 </body>
