@@ -473,3 +473,84 @@ form.sign-in-form {
     left: 50%;
   }
 }
+
+/* Fondo oscuro difuminado mejorado */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75); /* Más opaco */
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px); /* Más difuminado */
+  transition: opacity 0.3s ease;
+}
+
+/* Oculto por defecto */
+.popup-overlay.hidden {
+  display: none;
+}
+
+/* Caja del popup */
+.popup {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  animation: popup-fadein 0.4s ease;
+  max-width: 90%;
+  width: 300px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+/* Animación */
+@keyframes popup-fadein {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Nueva animación pulse para iconos */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.popup-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.popup-success {
+  color: green;
+}
+
+.popup-error {
+  color: red;
+}
+
+#popup-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#popup-description {
+  font-size: 1rem;
+}
