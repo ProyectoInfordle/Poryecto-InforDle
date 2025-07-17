@@ -1,184 +1,273 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Perfil</title>
+  <title>Perfil de Usuario</title>
   <style>
     body {
-      background: #121212;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2b2d42;
       color: white;
-      font-family: Arial, sans-serif;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
+      justify-content: space-around;
+      background-color: #8d99ae;
+      padding: 0.8rem;
     }
 
-    h1 {
-      color: #e63946;
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
     }
 
-    #avatar {
+    nav a:last-of-type {
+      background-color: #ae2012;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+    }
+
+    nav a:last-of-type:hover {
+      background-color: #9b1d10;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    #avatar img {
       width: 120px;
       height: 120px;
-      border-radius: 50%;
       object-fit: cover;
-      border: 3px solid #e63946;
-      margin-bottom: 20px;
+      border-radius: 50%;
+      border: 3px solid #333;
     }
 
-    #description {
-      margin-top: 10px;
-      padding: 10px;
+    #profile-desc {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #444;
+      background-color: #e0f7fa;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: inline-block;
+      max-width: 500px;
+    }
+
+    #edit-profile-btn {
+      margin-top: 1.5rem;
+      background-color: #2b2d42;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #edit-profile-btn:hover {
+      background-color: #1f2233;
+    }
+
+    #popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 2rem;
       border-radius: 10px;
       width: 90%;
       max-width: 400px;
-      height: 100px;
-      border: 1px solid #ccc;
-      background: #1e1e1e;
-      color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
-    #save-profile {
-      padding: 10px 20px;
-      background: #e63946;
-      color: white;
+    .popup-content input,
+    .popup-content textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .popup-content button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      margin-top: 15px;
+      border-radius: 5px;
     }
 
-    #image-upload {
-      margin-top: 15px;
-    }
-
-    #uploading-msg {
-      display: none;
-      color: #ccc;
-      margin-top: 10px;
-    }
-
-    #popup-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #222;
+    #save-btn {
+      background-color: #2b9348;
       color: white;
-      padding: 20px 30px;
-      border-radius: 12px;
-      z-index: 999;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      text-align: center;
+    }
+
+    #cancel-btn {
+      background-color: #aaa;
+      color: white;
+      margin-left: 1rem;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Bienvenido, <span id="username-display"></span></h1>
+  </header>
 
-  <h1>Tu Perfil</h1>
+  <nav>
+    <a href="#">Inicio</a>
+    <a href="#">Configuración</a>
+    <a href="#">Cerrar sesión</a>
+  </nav>
 
-  <img id="avatar" src="default-avatar.png" alt="Avatar" />
+  <main>
+    <div id="avatar">👤</div>
+    <h2 id="profile-name">Nombre del usuario</h2>
+    <p id="profile-desc" class="welcome-msg">Bienvenido a tu perfil</p>
+    <br/>
+    <button id="edit-profile-btn">Editar perfil</button>
+  </main>
 
-  <input type="file" id="image-upload" accept="image/*" />
-  <div id="uploading-msg">Subiendo imagen...</div>
-
-  <textarea id="description" placeholder="Escribe algo sobre ti..."></textarea>
-  <button id="save-profile">Guardar perfil</button>
-
-  <div id="popup-modal">
-    <p id="popup-text"></p>
+  <!-- Popup -->
+  <div id="popup-overlay" class="hidden">
+    <div class="popup-content">
+      <form id="profile-form">
+        <label for="desc-input">Descripción:</label>
+        <textarea id="desc-input" name="description" rows="3" placeholder="Escribe algo sobre ti..."></textarea>
+        <label for="avatar-upload">Cambiar avatar:</label>
+        <input type="file" id="avatar-upload" name="avatar" accept="image/*" />
+        <div>
+          <button type="submit" id="save-btn">Guardar</button>
+          <button type="button" id="cancel-btn">Cancelar</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    const backendURL = 'http://localhost:3000';
-    const username = localStorage.getItem('username');
-
-    if (!username) {
-      window.location.href = 'index.html';
+    function showPopup() {
+      document.getElementById('popup-overlay').classList.remove('hidden');
     }
 
-    // Cargar perfil existente
-    fetch(`${backendURL}/api/profile/${username}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          if (data.profile.avatar) {
-            document.getElementById('avatar').src = `${backendURL}/uploads/${data.profile.avatar}`;
-          }
-          document.getElementById('description').value = data.profile.description || '';
-        }
-      });
+    function hidePopup() {
+      document.getElementById('popup-overlay').classList.add('hidden');
+    }
 
-    // Subir imagen con animación 2s
-    document.getElementById('image-upload').addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
+    async function fetchLoggedUser() {
+      const res = await fetch('http://localhost:3000/api/auth/user');
+      if (!res.ok) throw new Error('No logueado');
+      const data = await res.json();
+      if (!data.success) throw new Error('Sesión inválida');
+      return data.username;
+    }
 
-      const uploadingMsg = document.getElementById('uploading-msg');
-      uploadingMsg.style.display = 'block';
+    async function loadProfile(username) {
+      const res = await fetch(`http://localhost:3000/api/profile/${username}`);
+      if (!res.ok) throw new Error('No se pudo cargar perfil');
+      const data = await res.json();
+      return data;
+    }
 
-      const formData = new FormData();
-      formData.append('image', file);
-      formData.append('username', username);
+    async function main() {
+      try {
+        const loggedUser = await fetchLoggedUser();
+        document.getElementById('username-display').textContent = loggedUser;
+        document.getElementById('profile-name').textContent = loggedUser;
 
-      setTimeout(() => {
-        fetch(`${backendURL}/api/profile/image`, {
-          method: 'POST',
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          uploadingMsg.style.display = 'none';
-          if (data.success) {
-            showPopup("Imagen subida correctamente");
-            document.getElementById('avatar').src = `${backendURL}/uploads/${data.filename}?t=${Date.now()}`;
-          } else {
-            showPopup("Error al subir imagen");
-          }
-        })
-        .catch(() => {
-          uploadingMsg.style.display = 'none';
-          showPopup("Error al conectar");
-        });
-      }, 2000);
-    });
+        const profile = await loadProfile(loggedUser);
+        const descDiv = document.getElementById('profile-desc');
+        const avatarDiv = document.getElementById('avatar');
 
-    // Guardar descripción
-    document.getElementById('save-profile').addEventListener('click', () => {
-      const description = document.getElementById('description').value;
-      fetch(`${backendURL}/api/profile/${username}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ description })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          showPopup("Perfil guardado con éxito");
+        descDiv.textContent = profile.description || 'Bienvenido a tu perfil';
+        if (profile.avatar) {
+          avatarDiv.innerHTML = `<img src="${profile.avatar}" alt="Avatar" />`;
         } else {
-          showPopup("No se pudo guardar");
+          avatarDiv.textContent = '👤';
         }
-      });
-    });
 
-    // Mostrar popup
-    function showPopup(message) {
-      const popup = document.getElementById('popup-modal');
-      const popupText = document.getElementById('popup-text');
+        document.getElementById('edit-profile-btn').addEventListener('click', () => {
+          document.getElementById('desc-input').value = descDiv.textContent;
+          showPopup();
+        });
 
-      popupText.textContent = message;
-      popup.style.display = 'block';
+        document.getElementById('cancel-btn').addEventListener('click', hidePopup);
+        document.getElementById('popup-overlay').addEventListener('click', (e) => {
+          if (e.target === document.getElementById('popup-overlay')) hidePopup();
+        });
 
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 2500);
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const desc = document.getElementById('desc-input').value;
+          const file = document.getElementById('avatar-upload').files[0];
+          const formData = new FormData();
+          formData.append('description', desc);
+          if (file) formData.append('avatar', file);
+
+          try {
+            const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
+              method: 'POST',
+              body: formData
+            });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.message);
+
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                avatarDiv.innerHTML = 'Cargando...';
+                setTimeout(() => {
+                  avatarDiv.innerHTML = `<img src="${e.target.result}" alt="Avatar" />`;
+                }, 2000);
+              };
+              reader.readAsDataURL(file);
+            }
+
+            descDiv.textContent = desc || 'Bienvenido a tu perfil';
+            hidePopup();
+          } catch (err) {
+            alert('Error: ' + err.message);
+          }
+        });
+
+        // Cerrar sesión
+        document.querySelectorAll('nav a')[2].addEventListener('click', async (e) => {
+          e.preventDefault();
+          await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
+          window.location.href = 'index.html';
+        });
+
+      } catch (err) {
+        alert('Debes iniciar sesión');
+        window.location.href = 'index.html';
+      }
     }
+
+    main();
   </script>
 </body>
 </html>
