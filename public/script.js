@@ -28,6 +28,8 @@ function deletePhrase(spanElement, phrase, index = phrase.length - 1, callback) 
 }
 
 
+
+
 function startTypingAnimation() {
     const typingSpan = document.querySelector('.typing-text span');
     let currentPhraseIndex = 0;
@@ -47,6 +49,7 @@ function startTypingAnimation() {
 
     typeNextPhrase();
 }
+
 
 
 window.onload = startTypingAnimation;
@@ -74,7 +77,7 @@ const btnAddInfo = document.getElementById("add-info-btn");
 
 let nextIndex = 0;
 
-// Función para crear un cuadro con nombre, rol y descripción
+
 function crearCuadroInformacion({ nombre, rol, descripcion }) {
   const div = document.createElement("div");
   div.classList.add("informacion-cuadro");
@@ -89,7 +92,7 @@ function crearCuadroInformacion({ nombre, rol, descripcion }) {
   return div;
 }
 
-// Agregar cuadro nuevo con datos en ciclo de infoTemplates
+
 btnAddInfo.addEventListener("click", () => {
   const data = infoTemplates[nextIndex];
   const nuevoCuadro = crearCuadroInformacion(data);
@@ -98,7 +101,54 @@ btnAddInfo.addEventListener("click", () => {
   nextIndex = (nextIndex + 1) % infoTemplates.length;
 });
 
-// Opcional: agregar un cuadro inicial al cargar la página
+
 window.addEventListener("DOMContentLoaded", () => {
   btnAddInfo.click();
 });
+
+
+async function fetchLoggedUser() {
+  return localStorage.getItem('loggedUser');
+}
+
+
+async function loadProfile(username) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/profile/${username}`, { credentials: 'include' });
+    if (!res.ok) throw new Error('No se pudo cargar el perfil');
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error('Error al cargar perfil:', e);
+    return {};
+  }
+}
+
+async function updateUserInfoUI() {
+  const userInfoDiv = document.getElementById('user-info');
+  const loggedUser = await fetchLoggedUser();
+
+  if (!loggedUser) {
+
+    userInfoDiv.innerHTML = `<a href="login.html" class="logo">Iniciar Sesión</a>`;
+    return;
+  }
+
+  const profileData = await loadProfile(loggedUser);
+
+  const avatarUrl = profileData.avatar || null;
+
+  userInfoDiv.innerHTML = `
+    <div class="menu-right" aria-label="Usuario Logueado" style="display:flex; align-items:center; gap:12px; font-size:1.2rem; font-weight:600;">
+      <a href="perfil.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; cursor:pointer;">
+        <div class="nav-avatar" id="nav-avatar" style="width:48px; height:48px; border-radius:50%; overflow:hidden; background:#eee; display:flex; justify-content:center; align-items:center; font-size:2rem;">
+          ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar de ${loggedUser}" style="width:100%; height:100%; object-fit:cover;"/>` : '👤'}
+        </div>
+        <strong id="username-display">${loggedUser}</strong>
+      </a>
+    </div>
+  `;
+}
+
+document.addEventListener('DOMContentLoaded', updateUserInfoUI);
+

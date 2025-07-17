@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `perfiles_usuario`;
 CREATE TABLE `perfiles_usuario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
-  `description` text DEFAULT 'Bienvenido a tu perfil',
+  `description` text,
   `avatar` longblob DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),

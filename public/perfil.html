@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil con Backend</title>
+  <title>Perfil</title>
   <style>
-    /* Aquí va el CSS que ya tenías para diseño y popup */
-    /* Reset básico */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -53,8 +51,31 @@
     }
 
     nav .menu-right {
-      font-size: 0.9rem;
-      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      
+    }
+
+    nav .menu-right .nav-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #94d2bd;
+      color: white;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+    }
+    nav .menu-right .nav-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     main {
@@ -108,9 +129,13 @@
       margin-bottom: 1rem;
       max-width: 350px;
       word-wrap: break-word;
+      padding: 0.5rem 1rem;
+      border: 1px solid #0a9396;
+      border-radius: 8px;
+      background: #e0f7f7;
     }
 
-    /* Popup Overlay */
+   
     .popup-overlay {
       position: fixed;
       top: 0;
@@ -129,17 +154,20 @@
       display: none;
     }
 
-    /* Popup Box */
+   
     .popup {
       background: white;
       border-radius: 20px;
-      padding: 2rem;
+      padding: 2.5rem 3rem;
       text-align: center;
       animation: popup-fadein 0.4s ease;
       max-width: 90%;
-      width: 350px;
+      width: 400px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
       z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     @keyframes popup-fadein {
@@ -156,7 +184,7 @@
     form {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.2rem;
       text-align: left;
     }
 
@@ -164,56 +192,117 @@
       font-weight: 600;
       margin-bottom: 0.3rem;
       display: block;
+      font-size: 1rem;
+      color: #005f73;
     }
 
     input[type="file"] {
-      padding: 0.3rem 0;
+      padding: 0.6rem 0.3rem;
+      border-radius: 8px;
+      border: 1px solid #0a9396;
+      cursor: pointer;
     }
 
     textarea {
       resize: vertical;
-      min-height: 60px;
+      min-height: 100px;
       font-family: inherit;
       font-size: 1rem;
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1.5px solid #0a9396;
+      box-shadow: inset 0 2px 5px rgba(10,147,150,0.15);
+      transition: border-color 0.3s ease;
+    }
+    textarea:focus {
+      border-color: #0a9396;
+      outline: none;
+      box-shadow: 0 0 8px #0a9396;
     }
 
     button {
       background: #0a9396;
       border: none;
-      padding: 0.7rem;
+      padding: 0.9rem 1rem;
       color: white;
       font-weight: 700;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-size: 1.1rem;
+      box-shadow: 0 3px 7px rgba(10,147,150,0.7);
     }
     button:hover {
       background: #007f7f;
+      box-shadow: 0 4px 12px rgba(0,127,127,0.85);
     }
 
     .cancel-btn {
       background: #a3a3a3;
       margin-top: 0.5rem;
+      box-shadow: 0 3px 7px rgba(163,163,163,0.7);
     }
     .cancel-btn:hover {
       background: #7a7a7a;
+      box-shadow: 0 4px 12px rgba(122,122,122,0.85);
     }
+
+    #logout-btn {
+      margin-left: 10px;
+      padding: 0.4rem 0.8rem;
+      background-color: #c0392b;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 3px 7px rgba(192,57,43,0.7);
+    }
+    #logout-btn:hover {
+      background-color: #e74c3c;
+      box-shadow: 0 4px 12px rgba(231,76,60,0.85);
+    }
+
+    
+    #popup-success {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00b894;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 9999;
+      animation: fadeInOut 0.5s ease-in-out;
+      font-size: 1rem;
+      text-align: center;
+      min-width: 220px;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 30px); }
+      10% { opacity: 1; transform: translate(-50%, 0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, 30px); }
+    }
+
   </style>
 </head>
 <body>
   <nav>
     <div class="menu-left">
-      <a href="#">Inicio</a>
+      <a href="index.html">Inicio</a>
       <a href="#">Perfil</a>
       <a href="#">Configuración</a>
       <a href="#" id="edit-profile-btn">Editar Perfil</a>
-      <a href="#">Cerrar sesión</a>
+      <a href="#" id="logout-btn">Cerrar sesión</a>
     </div>
-    <div class="menu-right">
-      Logeado como <strong id="username-display">...</strong>
+    <div class="menu-right" aria-label="Usuario Logueado">
+      <div class="nav-avatar" id="nav-avatar">👤</div>
+      <strong id="username-display">...</strong>
     </div>
   </nav>
 
@@ -248,115 +337,7 @@
     </div>
   </div>
 
-  <script>
-    async function fetchLoggedUser() {
-      try {
-        const res = await fetch('http://localhost:3000/api/auth/user');
-        if (!res.ok) throw new Error('No hay usuario logueado');
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'Error obteniendo usuario');
-        return data.username;
-      } catch (e) {
-        alert('Debes iniciar sesión');
-        throw e;
-      }
-    }
-
-    async function loadProfile(username) {
-      try {
-        const res = await fetch(`http://localhost:3000/api/profile/${username}`);
-        if (!res.ok) throw new Error('No se pudo cargar el perfil');
-        const data = await res.json();
-        return data;
-      } catch (e) {
-        alert('Error al cargar perfil: ' + e.message);
-        throw e;
-      }
-    }
-
-    async function main() {
-      try {
-        const loggedUser = await fetchLoggedUser();
-
-        document.getElementById('username-display').textContent = loggedUser;
-        document.getElementById('profile-name').textContent = loggedUser;
-
-        const profileData = await loadProfile(loggedUser);
-
-        const descDiv = document.getElementById('profile-desc');
-        const avatarDiv = document.getElementById('avatar');
-
-        descDiv.textContent = profileData.description || 'Bienvenido a tu perfil';
-
-        if (profileData.avatar) {
-          avatarDiv.innerHTML = `<img src="${profileData.avatar}" alt="Avatar Usuario" />`;
-        } else {
-          avatarDiv.textContent = '👤';
-        }
-
-        // Variables para popup y edición
-        const editBtn = document.getElementById('edit-profile-btn');
-        const popupOverlay = document.getElementById('popup-overlay');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const profileForm = document.getElementById('profile-form');
-        const descInput = document.getElementById('desc-input');
-        const fileInput = document.getElementById('avatar-upload');
-
-        editBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          descInput.value = descDiv.textContent;
-          popupOverlay.classList.remove('hidden');
-        });
-
-        cancelBtn.addEventListener('click', () => {
-          popupOverlay.classList.add('hidden');
-        });
-
-        popupOverlay.addEventListener('click', (e) => {
-          if (e.target === popupOverlay) popupOverlay.classList.add('hidden');
-        });
-
-        profileForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          const description = descInput.value.trim();
-          const formData = new FormData();
-          formData.append('description', description);
-          if (fileInput.files[0]) formData.append('avatar', fileInput.files[0]);
-
-          try {
-            const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
-              method: 'POST',
-              body: formData,
-            });
-            const data = await res.json();
-
-            if (!res.ok || !data.success) throw new Error(data.message || 'Error al guardar perfil');
-
-            if (fileInput.files[0]) {
-              const reader = new FileReader();
-              reader.onload = (event) => {
-                avatarDiv.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" />`;
-              };
-              reader.readAsDataURL(fileInput.files[0]);
-            }
-
-            descDiv.textContent = description || 'Bienvenido a tu perfil';
-            popupOverlay.classList.add('hidden');
-            fileInput.value = '';
-
-          } catch (err) {
-            alert('No se pudo guardar el perfil: ' + err.message);
-            console.error(err);
-          }
-        });
-
-      } catch (err) {
-        console.error('Error en la carga inicial:', err);
-      }
-    }
-
-    main();
-  </script>
+  <div id="popup-success">Has cerrado sesión</div>
+  <script src="perfil.js" defer></script>
 </body>
 </html>
