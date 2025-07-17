@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    #profile-container {
+      margin-top: 50px;
+    }
+
+    #avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid crimson;
+    }
+
+    textarea {
+      width: 60%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+    }
+
+    button {
+      background-color: crimson;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff3d3d;
+    }
+
+    #popup-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(30, 30, 30, 0.95);
+      padding: 20px 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #000;
+      z-index: 9999;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    #loading {
+      display: none;
+      color: crimson;
+      font-weight: bold;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="profile-container">
+    <h1>¡Bienvenido, <span id="username"></span>!</h1>
+    <img id="avatar" src="" alt="Avatar">
+    
+    <form id="profileForm">
+      <input type="file" id="avatarInput" name="avatar"><br>
+      <textarea id="descriptionInput" name="descripcion" placeholder="Escribe tu descripción..."></textarea><br>
+      <button type="submit">Guardar Perfil</button>
+    </form>
+
+    <p id="loading">Subiendo imagen...</p>
+    <p id="descriptionText"></p>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </div>
+
+  <div id="popup-modal"></div>
+
+  <script>
+    const username = localStorage.getItem('username');
+    if (!username) {
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('username').textContent = username;
+
+    const avatar = document.getElementById('avatar');
+    const descriptionText = document.getElementById('descriptionText');
+    const descriptionInput = document.getElementById('descriptionInput');
+    const loading = document.getElementById('loading');
+    const popupModal = document.getElementById('popup-modal');
+
+    // Obtener datos del perfil
+    fetch(`http://localhost:3000/api/profile/${username}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.avatar) avatar.src = data.avatar;
+        if (data.description) {
+          descriptionText.textContent = `Descripción: ${data.description}`;
+          descriptionInput.value = data.description;
+        }
+      });
+
+    // Guardar perfil
+    document.getElementById('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const file = document.getElementById('avatarInput').files[0];
+      const desc = descriptionInput.value;
+
+      if (file) formData.append('avatar', file);
+      if (desc) formData.append('descripcion', desc);
+
+      loading.style.display = 'block';
+
+      fetch(`http://localhost:3000/api/profile/${username}`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        setTimeout(() => {
+          loading.style.display = 'none';
+          showPopup(data.message || 'Perfil actualizado');
+          location.reload();
+        }, 2000); // 2 segundos de carga
+      })
+      .catch(() => {
+        loading.style.display = 'none';
+        showPopup('Error al guardar perfil');
+      });
+    });
+
+    // Cerrar sesión
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('username');
+      window.location.href = 'index.html';
+    });
+
+    // Mostrar popup centrado
+    function showPopup(message) {
+      popupModal.textContent = message;
+      popupModal.style.display = 'block';
+
+      setTimeout(() => {
+        popupModal.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
