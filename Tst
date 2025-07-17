@@ -2,77 +2,80 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Perfil</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Perfil de Usuario</title>
   <style>
     body {
-      background: #121212;
+      background-color: #121212;
       color: white;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    #profile-container {
-      margin-top: 50px;
     }
 
     #avatar {
       width: 150px;
       height: 150px;
       border-radius: 50%;
-      object-fit: cover;
+      margin-top: 20px;
       border: 3px solid crimson;
+      object-fit: cover;
     }
 
-    textarea {
+    #descriptionInput {
       width: 60%;
       padding: 10px;
-      border: none;
+      margin-top: 10px;
       border-radius: 10px;
-      margin: 10px;
+      border: none;
+      font-size: 16px;
     }
 
-    button {
+    #profileForm button, #logoutBtn {
       background-color: crimson;
+      color: white;
       border: none;
       padding: 10px 20px;
-      color: white;
-      font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
-      margin: 10px;
-      transition: 0.3s ease;
+      font-size: 16px;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
     }
 
-    button:hover {
-      background-color: #ff3d3d;
+    #profileForm button:hover, #logoutBtn:hover {
+      background-color: #e60000;
     }
 
     #popup-modal {
+      display: none;
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(30, 30, 30, 0.95);
+      background-color: rgba(30, 30, 30, 0.95);
+      color: white;
       padding: 20px 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px #000;
+      border-radius: 12px;
+      box-shadow: 0 0 20px black;
       z-index: 9999;
-      display: none;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.4s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -60%); }
-      to { opacity: 1; transform: translate(-50%, -50%); }
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
     }
 
     #loading {
       display: none;
       color: crimson;
       font-weight: bold;
+      margin-top: 10px;
       animation: pulse 1s infinite;
     }
 
@@ -85,20 +88,19 @@
 </head>
 <body>
 
-  <div id="profile-container">
-    <h1>¡Bienvenido, <span id="username"></span>!</h1>
-    <img id="avatar" src="" alt="Avatar">
-    
-    <form id="profileForm">
-      <input type="file" id="avatarInput" name="avatar"><br>
-      <textarea id="descriptionInput" name="descripcion" placeholder="Escribe tu descripción..."></textarea><br>
-      <button type="submit">Guardar Perfil</button>
-    </form>
+  <h1>Bienvenido, <span id="username"></span></h1>
+  <img id="avatar" src="" alt="Avatar de perfil"><br>
 
-    <p id="loading">Subiendo imagen...</p>
-    <p id="descriptionText"></p>
-    <button id="logoutBtn">Cerrar sesión</button>
-  </div>
+  <form id="profileForm">
+    <input type="file" id="avatarInput" name="avatar"><br>
+    <textarea id="descriptionInput" name="descripcion" placeholder="Escribe tu descripción..."></textarea><br>
+    <button type="submit">Guardar perfil</button>
+  </form>
+
+  <p id="loading">Subiendo imagen...</p>
+  <p id="descriptionText"></p>
+
+  <button id="logoutBtn">Cerrar sesión</button>
 
   <div id="popup-modal"></div>
 
@@ -113,10 +115,10 @@
     const avatar = document.getElementById('avatar');
     const descriptionText = document.getElementById('descriptionText');
     const descriptionInput = document.getElementById('descriptionInput');
-    const loading = document.getElementById('loading');
     const popupModal = document.getElementById('popup-modal');
+    const loading = document.getElementById('loading');
 
-    // Obtener datos del perfil
+    // Obtener perfil
     fetch(`http://localhost:3000/api/profile/${username}`)
       .then(res => res.json())
       .then(data => {
@@ -130,6 +132,7 @@
     // Guardar perfil
     document.getElementById('profileForm').addEventListener('submit', (e) => {
       e.preventDefault();
+
       const formData = new FormData();
       const file = document.getElementById('avatarInput').files[0];
       const desc = descriptionInput.value;
@@ -149,7 +152,7 @@
           loading.style.display = 'none';
           showPopup(data.message || 'Perfil actualizado');
           location.reload();
-        }, 2000); // 2 segundos de carga
+        }, 2000); // Animación de carga 2 segundos
       })
       .catch(() => {
         loading.style.display = 'none';
@@ -163,7 +166,7 @@
       window.location.href = 'index.html';
     });
 
-    // Mostrar popup centrado
+    // Popup animado
     function showPopup(message) {
       popupModal.textContent = message;
       popupModal.style.display = 'block';
@@ -173,6 +176,5 @@
       }, 3000);
     }
   </script>
-
 </body>
 </html>
