@@ -10,9 +10,10 @@ const PORT = 3000;
 
 
 app.use(cors({
-  origin: 'http://localhost:3000', // ajusta según frontend
-  credentials: true,
+  origin: 'http://localhost:3000',
+  credentials: true
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +35,7 @@ const upload = multer({
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '1234', 
+  password: '', 
   database: 'infordle',
 });
 
@@ -102,10 +103,24 @@ app.post('/api/users/logout', (req, res) => {
   });
 });
 
+
+// --- GET usuario logueado con rol ---
 app.get('/api/auth/user', (req, res) => {
   if (!req.session.user)
     return res.status(401).json({ success: false, message: 'No hay usuario logueado' });
-  res.json({ success: true, username: req.session.user });
+
+  const sql = 'SELECT username, role FROM users WHERE username = ?';
+  connection.query(sql, [req.session.user], (err, results) => {
+    if (err) {
+      console.error('Error obteniendo usuario:', err);
+      return res.status(500).json({ success: false, message: 'Error interno' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    }
+    const user = results[0];
+    res.json({ success: true, username: user.username, role: user.role });
+  });
 });
 
 app.get('/api/profile/:username', (req, res) => {
@@ -184,6 +199,62 @@ app.post('/api/profile/:username', upload.single('avatar'), (req, res) => {
     });
   });
 });
+
+// --- Rutas API primero ---
+app.get('/api/users/all', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
+
+  const sql = 'SELECT username, email, role FROM users';
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ success: false, message: 'Error interno' });
+    res.json({ success: true, users: results });
+  });
+});
+
+// --- Luego archivos estáticos ---
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// Cambiar rol de usuario
+app.post('/api/users/:username/change-role', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
+
+  const { role } = req.body;
+  const username = req.params.username;
+
+  const sqlCheckOwner = 'SELECT role FROM users WHERE username = ?';
+  connection.query(sqlCheckOwner, [req.session.user], (err, results) => {
+    if (err) return res.status(500).json({ success: false, message: 'Error interno' });
+    if (!results[0] || results[0].role !== 'owner') return res.status(403).json({ success: false, message: 'Solo owner puede cambiar roles' });
+
+    const sqlUpdate = 'UPDATE users SET role = ? WHERE username = ?';
+    connection.query(sqlUpdate, [role, username], (err2) => {
+      if (err2) return res.status(500).json({ success: false, message: 'Error cambiando rol' });
+      res.json({ success: true, message: 'Rol actualizado' });
+    });
+  });
+});
+
+// Eliminar usuario
+app.delete('/api/users/:username', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
+
+  const username = req.params.username;
+
+  const sqlCheckOwner = 'SELECT role FROM users WHERE username = ?';
+  connection.query(sqlCheckOwner, [req.session.user], (err, results) => {
+    if (err) return res.status(500).json({ success: false, message: 'Error interno' });
+    if (!results[0] || results[0].role !== 'owner') return res.status(403).json({ success: false, message: 'Solo owner puede eliminar usuarios' });
+
+    const sqlDelete = 'DELETE FROM users WHERE username = ?';
+    connection.query(sqlDelete, [username], (err2) => {
+      if (err2) return res.status(500).json({ success: false, message: 'Error eliminando usuario' });
+      res.json({ success: true, message: 'Usuario eliminado' });
+    });
+  });
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
