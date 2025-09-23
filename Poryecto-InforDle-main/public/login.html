@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styleLogin.css" />
+  <title>Mid page</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="forms-container">
+      <div class="signin-signup">
+
+    
+        <form action="#" class="sign-in-form" id="sign-in-form">
+          <h2 class="title">Inicia Sesión</h2>
+          <div class="input-field">
+            <i class="bx bx-user"></i>
+            <input type="text" name="username" placeholder="Username" required />
+          </div>
+          <div class="input-field">
+            <i class='bx bx-hide toggle-password' data-target="signin-password"></i>
+            <input type="password" name="password" id="signin-password" placeholder="Contraseña" required />
+          </div>
+          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+          <input type="submit" value="Iniciar Sesión" class="btn2 solid" />
+          <p class="social-text">Inicia sesión con otros métodos</p>
+          <div class="social-media">
+            <a href="#" class="social-icon"><i class="bx bxl-instagram-alt"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-google"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-facebook"></i></a>
+          </div>
+        </form>
+
+        <form action="#" class="sign-up-form" id="sign-up-form">
+          <h2 class="title">Regístrate</h2>
+          <div class="input-field">
+            <i class="bx bx-user"></i>
+            <input type="text" name="username" placeholder="Username" />
+          </div>
+          <div class="input-field">
+            <i class="bx bx-envelope"></i>
+            <input type="email" name="email" placeholder="Email" required />
+          </div>
+          <div class="input-field">
+            <i class='bx bx-hide toggle-password' data-target="signup-password"></i>
+            <input type="password" name="password" id="signup-password" placeholder="Contraseña" required />
+          </div>
+          <input type="submit" class="btn2" value="Registro" />
+          <p class="social-text">Regístrate por otros métodos</p>
+          <div class="social-media">
+            <a href="#" class="social-icon"><i class="bx bxl-instagram-alt"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-google"></i></a>
+            <a href="#" class="social-icon"><i class="bx bxl-facebook"></i></a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="panels-container">
+      <div class="panel left-panel">
+        <div class="content">
+          <h3>¿Eres nuevo? ¡Bienvenido a inforDle!</h3>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum impedit provident explicabo nihil?</p>
+          <button class="btn transparent" id="sign-up-btn">Regístrate</button>
+        </div>
+        <img src="img/log.svg" class="image" alt="Imagen izquierda" />
+      </div>
+      <div class="panel right-panel">
+        <div class="content">
+          <h3>¿Ya tienes cuenta?</h3>
+          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat illo dolor consequatur.</p>
+          <button class="btn transparent" id="sign-in-btn">Iniciar Sesión</button>
+        </div>
+        <img src="img/register.svg" class="image" alt="Imagen derecha" />
+      </div>
+    </div>
+  </div>
+
+  <div id="popup-overlay" class="popup-overlay hidden">
+    <div id="popup" class="popup">
+      <div id="popup-icon" class="popup-icon">✔️</div>
+      <h2 id="popup-title">Mensaje</h2>
+      <p id="popup-description">Aquí irá la descripción del mensaje.</p>
+    </div>
+  </div>
+
+  <script src="jslogin.js" defer></script>
+  <script src="Hide.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil</title>
+  <link rel="stylesheet" href="styleperfil.css" />
+</head>
+<body>
+  <nav>
+    <div class="menu-left">
+      <a href="index.html">Inicio</a>
+      <a href="#">Juegos</a>
+      <a href="#" id="owner-action-btn">Soon</a>
+      <a href="#" id="edit-profile-btn">Editar Perfil</a>
+      <a href="#" id="logout-btn">Cerrar sesión</a>
+    </div>
+    <div class="menu-right" aria-label="Usuario Logueado">
+      <div class="nav-avatar" id="nav-avatar">👤</div>
+      <strong id="username-display">...</strong>
+    </div>
+  </nav>
+
+  <main>
+    <h1>Bienvenido</h1>
+    <p>Este es el menu interactivo</p>
+
+    <section class="profile">
+      <div class="avatar" aria-label="Avatar Usuario" id="avatar">
+        👤
+      </div>
+      <div class="profile-name" id="profile-name">...</div>
+      <div class="welcome-msg" id="profile-desc">
+        Bienvenido a tu perfil
+      </div>
+    </section>
+  </main>
+
+  <section id="owner-panel" style="display:none;">
+    <h2>Panel de administración (Owner/Admin)</h2>
+      <table id="users-table">
+        <thead>
+           <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Cambiar Rol</th>
+            <th>Eliminar Usuario</th>
+            <th>Guardar</th>
+          </tr>
+        </thead>
+        <tbody id="owner-users-body">
+              <!-- Usuarios se cargarán aquí -->
+        </tbody>
+      </table>
+  </section>
+
+    <div id="admin-panel">
+      <h2>Admin Panel</h2>
+      <table id="users-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+          </tr>
+        </thead>
+        <tbody id="admin-users-body"></tbody>
+      </table>
+
+      <div class="maintenance-x">
+        <div class="strip strip1">
+          <div class="moving-text">
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span> <!-- duplicado para loop suave -->
+          </div>
+        </div>
+        <div class="strip strip2">
+          <div class="moving-text">
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️MANTENIMIENTO⚠️&nbsp;&nbsp;&nbsp;</span> <!-- duplicado para loop suave -->
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+  <div class="popup-overlay hidden" id="popup-overlay">
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <h2 id="popup-title">Editar Perfil</h2>
+    <form id="profile-form">
+      <label for="username-input">Cambiar nombre de usuario:</label>
+      <input type="text" id="username-input" placeholder="Nuevo nombre de usuario" maxlength="20" />
+
+      <label for="avatar-upload">Subir imagen de avatar:</label>
+      <input type="file" id="avatar-upload" accept="image/*" />
+
+      <label for="desc-input">Cambiar descripción:</label>
+      <textarea id="desc-input" maxlength="200" placeholder="Escribe una descripción..."></textarea>
+
+      <button type="submit">Guardar Cambios</button>
+      <button type="button" class="cancel-btn" id="cancel-btn">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+
+
+  <div id="popup-success">Has cerrado sesión</div>
+  <script src="perfil.js" defer></script>
+</body>
+</html>
