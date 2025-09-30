@@ -8,7 +8,7 @@ const observer = new IntersectionObserver((entries) => {
   });
 });
 
-
+// Solo observar el gif-container de Informacion
 document.querySelectorAll('.gif-container').forEach(el => {
   observer.observe(el);
 });
