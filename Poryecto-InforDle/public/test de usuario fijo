@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil con Backend</title>
+  <style>
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: #005f73;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      background: #0a9396;
+    }
+
+    nav .menu-left {
+      flex-grow: 1;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav .menu-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    #nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #94d2bd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .profile {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #94d2bd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: auto;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a9396;
+    }
+
+    .welcome-msg {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 1rem;
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+
+    /* Popup Overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: opacity 0.3s ease;
+    }
+    .popup-overlay.hidden {
+      display: none;
+    }
+
+    /* Popup Box */
+    .popup {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      animation: popup-fadein 0.4s ease;
+      max-width: 90%;
+      width: 350px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+    }
+
+    @keyframes popup-fadein {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    input[type="file"] {
+      padding: 0.3rem 0;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #0a9396;
+      border: none;
+      padding: 0.7rem;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #007f7f;
+    }
+
+    .cancel-btn {
+      background: #a3a3a3;
+      margin-top: 0.5rem;
+    }
+    .cancel-btn:hover {
+      background: #7a7a7a;
+    }
+
+    /* Estilos para popup de error */
+    .error-popup {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(4px);
+    }
+
+    .error-popup.hidden {
+      display: none;
+    }
+
+    .error-popup-content {
+      background: #fff;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      max-width: 90%;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .error-popup-content h3 {
+      margin-bottom: 1rem;
+      color: #d9534f;
+    }
+
+    .error-popup-content button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #d9534f;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .error-popup-content button:hover {
+      background: #b52b27;
+    }
+
+  </style>
+</head>
+<body data-username="UsuarioCreadoEnDB">
+  <nav>
+    <div class="menu-left">
+      <a href="#">Inicio</a>
+      <a href="#">Perfil</a>
+      <a href="#">Configuración</a>
+      <a href="#" id="edit-profile-btn">Editar Perfil</a>
+      <a href="#">Cerrar sesión</a>
+    </div>
+    <div class="menu-right" id="user-info">
+      <div id="nav-avatar">👤</div>
+      <strong id="username-display">Usuario123</strong>
+    </div>
+  </nav>
+
+  <main>
+    <h1>¡Test Completo!</h1>
+    <p>Has sido registrado exitosamente.</p>
+
+    <section class="profile">
+      <div class="avatar" aria-label="Avatar Usuario" id="avatar">👤</div>
+      <div class="profile-name" id="profile-name">Usuario123</div>
+      <div class="welcome-msg" id="profile-desc">Bienvenido a tu perfil</div>
+    </section>
+  </main>
+
+  <!-- Popup editar perfil -->
+  <div class="popup-overlay hidden" id="popup-overlay">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <h2 id="popup-title">Editar Perfil</h2>
+      <form id="profile-form">
+        <label for="avatar-upload">Subir imagen de avatar:</label>
+        <input type="file" id="avatar-upload" accept="image/*" />
+        
+        <label for="desc-input">Cambiar descripción:</label>
+        <textarea id="desc-input" maxlength="200" placeholder="Escribe una descripción..."></textarea>
+        
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" class="cancel-btn" id="cancel-btn">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Popup error -->
+  <div class="error-popup hidden" id="error-popup" role="alertdialog" aria-modal="true" aria-labelledby="error-title" aria-describedby="error-msg">
+    <div class="error-popup-content">
+      <h3 id="error-title">Error</h3>
+      <p id="error-msg"></p>
+      <button id="error-close-btn">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    // Obtén el usuario logeado desde el atributo data-username del body
+    const loggedUser = document.body.dataset.username || 'Usuario123';
+    console.log('Usuario cargado en frontend:', loggedUser);
+
+    const usernameDisplay = document.getElementById('username-display');
+    const profileName = document.getElementById('profile-name');
+    const avatarDiv = document.getElementById('avatar');
+    const descDiv = document.getElementById('profile-desc');
+    const navAvatar = document.getElementById('nav-avatar');
+
+    const editBtn = document.getElementById('edit-profile-btn');
+    const popupOverlay = document.getElementById('popup-overlay');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const profileForm = document.getElementById('profile-form');
+
+    // Error popup elements
+    const errorPopup = document.getElementById('error-popup');
+    const errorMsg = document.getElementById('error-msg');
+    const errorCloseBtn = document.getElementById('error-close-btn');
+
+    function showErrorPopup(message) {
+      errorMsg.textContent = message;
+      errorPopup.classList.remove('hidden');
+    }
+
+    errorCloseBtn.addEventListener('click', () => {
+      errorPopup.classList.add('hidden');
+    });
+
+    // Mostrar nombre usuario en la página
+    usernameDisplay.textContent = loggedUser;
+    profileName.textContent = loggedUser;
+
+    // Función para cargar perfil desde backend
+    async function loadProfile() {
+      try {
+        const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`);
+        if (!res.ok) throw new Error('No se pudo cargar el perfil');
+        const data = await res.json();
+
+        descDiv.textContent = data.description || 'Bienvenido a tu perfil';
+
+        if (data.avatar) {
+          avatarDiv.innerHTML = `<img src="${data.avatar}" alt="Avatar Usuario" />`;
+          navAvatar.innerHTML = `<img src="${data.avatar}" alt="Avatar Usuario" style="width: 100%; height: 100%; object-fit: cover;" />`;
+        } else {
+          avatarDiv.textContent = '👤';
+          navAvatar.textContent = '👤';
+        }
+      } catch (e) {
+        console.error('Error cargando perfil:', e);
+        showErrorPopup('No se pudo cargar el perfil. Intenta recargar la página.');
+      }
+    }
+
+    // Abrir popup para editar perfil
+    editBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('desc-input').value = descDiv.textContent;
+      popupOverlay.classList.remove('hidden');
+    });
+
+    // Cancelar edición
+    cancelBtn.addEventListener('click', () => {
+      popupOverlay.classList.add('hidden');
+    });
+
+    // Cerrar popup si clic fuera del cuadro
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        popupOverlay.classList.add('hidden');
+      }
+    });
+
+    // Enviar formulario para actualizar perfil
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('avatar-upload');
+      const descInput = document.getElementById('desc-input').value.trim();
+
+      const formData = new FormData();
+      formData.append('description', descInput);
+
+      if (fileInput.files[0]) {
+        console.log('Subiendo archivo avatar:', fileInput.files[0].name, fileInput.files[0].size);
+        formData.append('avatar', fileInput.files[0]);
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          // Si status HTTP no OK o JSON tiene success false, lanza error con mensaje
+          throw new Error(data.message || 'Error al guardar perfil');
+        }
+
+        // Si llega acá, guardó bien
+        if (fileInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            avatarDiv.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" />`;
+            navAvatar.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" style="width: 100%; height: 100%; object-fit: cover;" />`;
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        }
+
+        descDiv.textContent = descInput || 'Bienvenido a tu perfil';
+        popupOverlay.classList.add('hidden');
+        fileInput.value = '';
+
+      } catch (error) {
+        showErrorPopup('No se pudo guardar el perfil: ' + error.message);
+        console.error('Error al guardar perfil:', error);
+      }
+    });
+
+    // Carga inicial del perfil
+    loadProfile();
+  </script>
+</body>
+</html>
+
+
+
+
+aca otro --------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil con Backend</title>
+  <style>
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: #005f73;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      background: #0a9396;
+    }
+
+    nav .menu-left {
+      flex-grow: 1;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav .menu-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    #nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #94d2bd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .profile {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #94d2bd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: auto;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a9396;
+    }
+
+    .welcome-msg {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 1rem;
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+
+    /* Popup Overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: opacity 0.3s ease;
+    }
+    .popup-overlay.hidden {
+      display: none;
+    }
+
+    /* Popup Box */
+    .popup {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      animation: popup-fadein 0.4s ease;
+      max-width: 90%;
+      width: 350px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+    }
+
+    @keyframes popup-fadein {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    input[type="file"] {
+      padding: 0.3rem 0;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #0a9396;
+      border: none;
+      padding: 0.7rem;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #007f7f;
+    }
+
+    .cancel-btn {
+      background: #a3a3a3;
+      margin-top: 0.5rem;
+    }
+    .cancel-btn:hover {
+      background: #7a7a7a;
+    }
+
+    /* Estilos para popup de error */
+    .error-popup {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(4px);
+    }
+
+    .error-popup.hidden {
+      display: none;
+    }
+
+    .error-popup-content {
+      background: #fff;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      max-width: 90%;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .error-popup-content h3 {
+      margin-bottom: 1rem;
+      color: #d9534f;
+    }
+
+    .error-popup-content button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #d9534f;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .error-popup-content button:hover {
+      background: #b52b27;
+    }
+
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="menu-left">
+      <a href="#">Inicio</a>
+      <a href="#">Perfil</a>
+      <a href="#">Configuración</a>
+      <a href="#" id="edit-profile-btn">Editar Perfil</a>
+      <a href="#">Cerrar sesión</a>
+    </div>
+    <div class="menu-right" id="user-info">
+      <div id="nav-avatar">👤</div>
+      <strong id="username-display">Usuario</strong>
+    </div>
+  </nav>
+
+  <main>
+    <h1>¡Test Completo!</h1>
+    <p>Has sido registrado exitosamente.</p>
+
+    <section class="profile">
+      <div class="avatar" aria-label="Avatar Usuario" id="avatar">👤</div>
+      <div class="profile-name" id="profile-name">Usuario</div>
+      <div class="welcome-msg" id="profile-desc">Bienvenido a tu perfil</div>
+    </section>
+  </main>
+
+  <!-- Popup editar perfil -->
+  <div class="popup-overlay hidden" id="popup-overlay">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <h2 id="popup-title">Editar Perfil</h2>
+      <form id="profile-form">
+        <label for="avatar-upload">Subir imagen de avatar:</label>
+        <input type="file" id="avatar-upload" accept="image/*" />
+        
+        <label for="desc-input">Cambiar descripción:</label>
+        <textarea id="desc-input" maxlength="200" placeholder="Escribe una descripción..."></textarea>
+        
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" class="cancel-btn" id="cancel-btn">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Popup error -->
+  <div class="error-popup hidden" id="error-popup" role="alertdialog" aria-modal="true" aria-labelledby="error-title" aria-describedby="error-msg">
+    <div class="error-popup-content">
+      <h3 id="error-title">Error</h3>
+      <p id="error-msg"></p>
+      <button id="error-close-btn">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    // En este caso sin usuario por defecto, se puede asignar dinámicamente luego
+    let loggedUser = null;
+
+    const usernameDisplay = document.getElementById('username-display');
+    const profileName = document.getElementById('profile-name');
+    const avatarDiv = document.getElementById('avatar');
+    const descDiv = document.getElementById('profile-desc');
+    const navAvatar = document.getElementById('nav-avatar');
+
+    const editBtn = document.getElementById('edit-profile-btn');
+    const popupOverlay = document.getElementById('popup-overlay');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const profileForm = document.getElementById('profile-form');
+
+    // Error popup elements
+    const errorPopup = document.getElementById('error-popup');
+    const errorMsg = document.getElementById('error-msg');
+    const errorCloseBtn = document.getElementById('error-close-btn');
+
+    function showErrorPopup(message) {
+      errorMsg.textContent = message;
+      errorPopup.classList.remove('hidden');
+    }
+
+    errorCloseBtn.addEventListener('click', () => {
+      errorPopup.classList.add('hidden');
+    });
+
+    function updateUIWithUser(username, avatarBase64=null, description=null) {
+      loggedUser = username;
+      usernameDisplay.textContent = username;
+      profileName.textContent = username;
+      descDiv.textContent = description || 'Bienvenido a tu perfil';
+
+      if (avatarBase64) {
+        avatarDiv.innerHTML = `<img src="${avatarBase64}" alt="Avatar Usuario" />`;
+        navAvatar.innerHTML = `<img src="${avatarBase64}" alt="Avatar Usuario" style="width: 100%; height: 100%; object-fit: cover;" />`;
+      } else {
+        avatarDiv.textContent = '👤';
+        navAvatar.textContent = '👤';
+      }
+    }
+
+    // Aquí podrías setear loggedUser e invocar loadProfile si tienes el usuario en JS
+    // Ejemplo:
+    // loggedUser = 'UsuarioDesdeLogin';
+    // updateUIWithUser(loggedUser);
+    // loadProfile();
+
+    async function loadProfile() {
+      if (!loggedUser) {
+        console.warn('No hay usuario logeado definido');
+        return;
+      }
+      try {
+        const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`);
+        if (!res.ok) throw new Error('No se pudo cargar el perfil');
+        const data = await res.json();
+
+        updateUIWithUser(loggedUser, data.avatar || null, data.description || null);
+      } catch (e) {
+        console.error('Error cargando perfil:', e);
+        showErrorPopup('No se pudo cargar el perfil. Intenta recargar la página.');
+      }
+    }
+
+    editBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('desc-input').value = descDiv.textContent;
+      popupOverlay.classList.remove('hidden');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      popupOverlay.classList.add('hidden');
+    });
+
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        popupOverlay.classList.add('hidden');
+      }
+    });
+
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!loggedUser) {
+        showErrorPopup('No hay usuario logeado para guardar el perfil.');
+        return;
+      }
+
+      const fileInput = document.getElementById('avatar-upload');
+      const descInput = document.getElementById('desc-input').value.trim();
+
+      const formData = new FormData();
+      formData.append('description', descInput);
+
+      if (fileInput.files[0]) {
+        formData.append('avatar', fileInput.files[0]);
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'Error al guardar perfil');
+        }
+
+        if (fileInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            avatarDiv.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" />`;
+            navAvatar.innerHTML = `<img src="${event.target.result}" alt="Avatar Usuario" style="width: 100%; height: 100%; object-fit: cover;" />`;
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        }
+
+        descDiv.textContent = descInput || 'Bienvenido a tu perfil';
+        popupOverlay.classList.add('hidden');
+        fileInput.value = '';
+
+      } catch (error) {
+        showErrorPopup('No se pudo guardar el perfil: ' + error.message);
+        console.error('Error al guardar perfil:', error);
+      }
+    });
+
+    // Si defines el usuario, llama a loadProfile():
+    // loggedUser = 'UsuarioDesdeLogin';
+    // loadProfile();
+
+  </script>
+</body>
+</html>

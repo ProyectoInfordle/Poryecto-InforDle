@@ -1,0 +1,370 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  list-style: none;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  font-size: 50%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bg-color: #000000;
+  --bg-color2: #111111;
+  --bg-color3: #222222; /* para fondos secundarios */
+  --second-bg-color: #1a1a1a;
+  --text-color: #eeeeee;
+  --main-color: #ff3b3b;
+  --main-color2: #bbbbbb;
+  --accent-pink: #ff4081;
+  --accent-purple: #9c27b0;
+  --accent-yellow: #ffc107;
+  --tarjeta-bg: #1e1e1e;
+  --btn-hover-color: #b00020;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  user-select: none;
+}
+
+/* HEADER */
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 2rem 12%;
+  background-color: var(--bg-color2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 9999;
+}
+
+#menu-icon {
+  font-size: 3.6rem;
+  color: var(--main-color);
+  display: none;
+}
+
+.logo {
+  font-size: 3rem;
+  color: var(--text-color);
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logo:hover {
+  color: var(--main-color);
+  transform: scale(1.1);
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar a {
+  font-size: 2.2rem;
+  color: var(--text-color);
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  color: var(--main-color);
+}
+
+/* SECTIONS */
+section {
+  min-height: 100vh;
+  padding: 10rem 12%;
+}
+
+/* HOME */
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.home-content h1 {
+  font-size: 6rem;
+  color: var(--text-color);
+}
+
+.home-content h3 {
+  font-size: 3rem;
+  color: var(--main-color);
+  margin: 1rem 0;
+}
+
+.home-content p {
+  font-size: 2rem;
+  color: #ccc;
+}
+
+.span {
+  background: linear-gradient(-45deg, #ff6ec4, #ff1e1e, #ff6ec4, #f54e4e);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animarTexto 10s ease infinite;
+}
+
+@keyframes animarTexto {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* INFORMACIÓN - Un cuadro grande tipo pizarra */
+.informacion-section {
+  background-color: var(--bg-color2);
+  padding: 8rem 5%;
+  text-align: center;
+}
+
+.informacion-title {
+  font-size: 4rem;
+  color: var(--main-color);
+  margin-bottom: 4rem;
+}
+
+.informacion-content {
+  background-color: var(--tarjeta-bg);
+  color: var(--text-color);
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto 3rem auto;
+  padding: 2rem 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.4);
+  font-size: 1.8rem;
+  line-height: 1.5;
+  user-select: text;
+  overflow-y: auto;
+  max-height: 300px; /* Ajustable */
+}
+
+/* Botón Agregar Información */
+.btn-add {
+  display: block;
+  margin: 0 auto;
+  padding: 1.2rem 3rem;
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  user-select: none;
+}
+
+.btn-add:hover {
+  background-color: var(--btn-hover-color);
+}
+
+/* SOPORTE */
+.general {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--second-bg-color);
+  color: var(--text-color);
+  gap: 3rem;
+  padding: 5rem 5%;
+  align-items: center;
+  justify-content: center;
+}
+
+.general-1 {
+  flex: 1 1 320px;
+  min-width: 280px;
+  max-width: 600px;
+}
+
+.general-1 h2 {
+  font-size: 4rem;
+  color: var(--main-color);
+  margin-bottom: 1.5rem;
+}
+
+.general-1 p {
+  font-size: 1.9rem;
+  margin: 2rem 0;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.btn-4 {
+  padding: 1rem 3rem;
+  background: var(--main-color);
+  border-radius: 3rem;
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: 700;
+  transition: 0.3s;
+  display: inline-block;
+  user-select: none;
+  border: none;
+}
+
+.btn-4:hover {
+  background: var(--btn-hover-color);
+  color: white;
+  box-shadow: 0 0 15px var(--main-color);
+}
+
+.general-2 {
+  flex: 1 1 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 320px;
+}
+
+.general-2 img#prueba {
+  max-width: 260px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4);
+  user-select: none;
+  transition: transform 0.3s;
+}
+
+.general-2 img#prueba:hover {
+  transform: scale(1.05);
+}
+
+/* CRÉDITOS */
+.creditos-section {
+  background-color: var(--bg-color2);
+  color: var(--text-color);
+  padding: 6rem 5%;
+}
+
+.creditos-title {
+  font-size: 5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--main-color);
+}
+
+/* Contenedor tarjetas */
+.tarjetas-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  padding: 3rem;
+  background-color: var(--bg-color3);
+  border-radius: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tarjetas individuales */
+.tarjeta {
+  background-color: var(--tarjeta-bg);
+  color: var(--text-color);
+  width: 240px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+  padding: 2rem 1.8rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tarjeta:focus,
+.tarjeta:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 25px rgba(255, 59, 59, 0.6);
+  outline: none;
+}
+
+.tarjeta-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.tarjeta-contenido h3 {
+  font-size: 2.2rem;
+  margin-bottom: 0.2rem;
+  text-align: center;
+}
+
+.tarjeta-contenido .rol {
+  font-size: 1.6rem;
+  color: var(--main-color2);
+  font-style: italic;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.tarjeta-contenido .descripcion {
+  font-size: 1.4rem;
+  color: #ccc;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.btn-view {
+  padding: 0.6rem 1.2rem;
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+  user-select: none;
+  align-self: center;
+}
+
+.btn-view:hover {
+  background-color: var(--btn-hover-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .informacion-content {
+    width: 95%;
+    max-height: 250px;
+    font-size: 1.6rem;
+  }
+  .tarjetas-container {
+    gap: 2rem;
+  }
+  .tarjeta {
+    width: 90%;
+    max-width: 320px;
+  }
+}
