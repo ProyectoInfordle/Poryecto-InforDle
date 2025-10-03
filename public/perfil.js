@@ -15,12 +15,14 @@ async function loadProfile(username) {
   try {
     const res = await fetch(`http://localhost:3000/api/profile/${username}`, { credentials: 'include' });
     if (!res.ok) throw new Error('No se pudo cargar el perfil');
-    return await res.json();
+    const data = await res.json();
+    return data; // data debe contener: description, avatar, role
   } catch (e) {
     alert('Error al cargar perfil: ' + e.message);
     throw e;
   }
 }
+
 
 function showPopupSuccess(msg = 'Acción realizada correctamente') {
   const popup = document.getElementById('popup-success');
@@ -47,18 +49,29 @@ document.getElementById('logout-btn')?.addEventListener('click', async () => {
   }
 });
 
-function toggleMaintenance(role) {
-  const overlay = document.querySelector('.maintenance-x');
+function showPanels(role) {
   const adminPanel = document.getElementById('admin-panel');
   const ownerPanel = document.getElementById('owner-panel');
+  const overlay = adminPanel?.querySelector('.maintenance-x');
 
-  // Overlay visible solo para admin
-  if (overlay) overlay.style.display = role === 'admin' ? 'block' : 'none';
+  // Ocultar todo por defecto
+  if (adminPanel) adminPanel.style.display = 'none';
+  if (ownerPanel) ownerPanel.style.display = 'none';
+  if (overlay) overlay.classList.remove('active');
 
-  // Mostrar paneles según rol
-  if (ownerPanel) ownerPanel.style.display = role === 'owner' ? 'block' : 'none';
-  if (adminPanel) adminPanel.style.display = role === 'admin' ? 'block' : 'none';
+  // Mostrar solo según rol
+  if (role === 'admin') {
+    if (adminPanel) adminPanel.style.display = 'block';
+    if (overlay) overlay.classList.add('active'); // activa banner y bloquea solo admin-panel
+  } else if (role === 'owner') {
+    if (ownerPanel) ownerPanel.style.display = 'block';
+  }
+  // member → no muestra panel ni overlay
 }
+
+
+
+
 
 
 async function main() {
@@ -66,8 +79,10 @@ async function main() {
     const userData = await fetchLoggedUser();
     const loggedUser = userData.username;
     const role = userData.role;
-    
-    toggleMaintenance(role);
+
+    showPanels(role);
+
+
 
     // ---- ELEMENTOS DOM ----
     const usernameDisplay = document.getElementById('username-display');
@@ -99,52 +114,83 @@ async function main() {
     loadAvatar(navAvatarDiv, profileData.avatar);
 
     // ---- EDITAR PERFIL ----
-    editBtn?.addEventListener('click', (e) => {
-      e.preventDefault();
-      descInput.value = descDiv.textContent;
-      popupOverlay.classList.remove('hidden');
+editBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  descInput.value = descDiv.textContent;
+  popupOverlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+});
+
+// Animación de cierre al presionar cancelar
+cancelBtn?.addEventListener('click', () => {
+  if (!popupOverlay.classList.contains('hidden')) {
+    const popup = popupOverlay.querySelector('.popup');
+    popup.classList.add('closing');
+    popup.addEventListener('animationend', () => {
+      popup.classList.remove('closing');
+      popupOverlay.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, { once: true });
+  }
+});
+
+// Comentamos esta parte para que no se cierre al hacer click afuera
+/*
+popupOverlay?.addEventListener('click', (e) => { 
+  if (e.target === popupOverlay) popupOverlay.classList.add('hidden'); 
+});
+*/
+
+profileForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const description = descInput.value.trim();
+  const formData = new FormData();
+  formData.append('description', description);
+  if (fileInput.files[0]) formData.append('avatar', fileInput.files[0]);
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
     });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.message || 'Error al guardar perfil');
 
-    cancelBtn?.addEventListener('click', () => popupOverlay.classList.add('hidden'));
-    popupOverlay?.addEventListener('click', (e) => { if (e.target === popupOverlay) popupOverlay.classList.add('hidden'); });
+    if (fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        loadAvatar(avatarDiv, event.target.result);
+        loadAvatar(navAvatarDiv, event.target.result);
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    }
 
-    profileForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const description = descInput.value.trim();
-      const formData = new FormData();
-      formData.append('description', description);
-      if (fileInput.files[0]) formData.append('avatar', fileInput.files[0]);
+    descDiv.textContent = description || 'Bienvenido a tu perfil';
 
-      try {
-        const res = await fetch(`http://localhost:3000/api/profile/${loggedUser}`, {
-          method: 'POST',
-          body: formData,
-          credentials: 'include'
-        });
-        const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.message || 'Error al guardar perfil');
+    // Animación de cierre al guardar
+    const popup = popupOverlay.querySelector('.popup');
+    popup.classList.add('closing');
+    popup.addEventListener('animationend', () => {
+      popup.classList.remove('closing');
+      popupOverlay.classList.add('hidden');
+    }, { once: true });
 
-        if (fileInput.files[0]) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            loadAvatar(avatarDiv, event.target.result);
-            loadAvatar(navAvatarDiv, event.target.result);
-          };
-          reader.readAsDataURL(fileInput.files[0]);
-        }
+    fileInput.value = '';
+    showPopupSuccess('Perfil actualizado correctamente');
+  } catch (err) {
+    alert('No se pudo guardar el perfil: ' + err.message);
+    console.error(err);
+  }
+});
+;
 
-        descDiv.textContent = description || 'Bienvenido a tu perfil';
-        popupOverlay.classList.add('hidden');
-        fileInput.value = '';
-        showPopupSuccess('Perfil actualizado correctamente');
-      } catch (err) {
-        alert('No se pudo guardar el perfil: ' + err.message);
-        console.error(err);
-      }
-    });
+    
+
+    
 
     // ---- PANEL OWNER / ADMIN ----
-    if (role === 'owner' || role === 'admin') {
+    if (role === 'owner' || role === 'admin' || role === 'menber') {
       const panelId = role === 'owner' ? 'owner-panel' : 'admin-panel';
       const panel = document.getElementById(panelId);
       if (!panel) return;

@@ -12,7 +12,7 @@ const popupDescription = document.getElementById('popup-description');
 const signInForm = document.querySelector("#sign-in-form");
 const signUpForm = document.querySelector("#sign-up-form");
 
-// Cambiar entre login y registro
+
 sign_up_btn.addEventListener("click", () => {
   container.classList.add("sign-up-mode");
 });
@@ -20,7 +20,7 @@ sign_in_btn.addEventListener("click", () => {
   container.classList.remove("sign-up-mode");
 });
 
-// Mostrar popup con ícono, título y descripción
+
 function showPopup(type, title, description = '') {
   popupIcon.textContent = type === 'success' ? '✔️' : '❌';
   popupIcon.className = 'popup-icon ' + (type === 'success' ? 'popup-success' : 'popup-error');
@@ -31,12 +31,12 @@ function showPopup(type, title, description = '') {
   popupOverlay.classList.remove('hidden');
 }
 
-// Cerrar popup haciendo click en cualquier parte del overlay
+
 popupOverlay.addEventListener('click', () => {
   popupOverlay.classList.add('hidden');
 });
 
-// Registro
+
 signUpForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -67,7 +67,7 @@ signUpForm.addEventListener('submit', async (e) => {
   }
 });
 
-// Login
+
 signInForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -84,10 +84,12 @@ signInForm.addEventListener('submit', async (e) => {
     const data = await res.json();
 
     if (data.success) {
+      localStorage.setItem('loggedUser', username);
+
       showPopup('success', '¡Inicio exitoso!', data.message);
       setTimeout(() => {
         window.location.href = 'perfil.html';
-      }, 2000); // espera 2 segundos
+      }, 2000); 
     } else {
       showPopup('error', 'Error de inicio', data.message);
     }

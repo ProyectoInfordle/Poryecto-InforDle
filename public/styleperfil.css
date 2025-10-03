@@ -11,6 +11,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  animation: floatText 1s ease forwards;
 }
 
 /* ----------------- NAV ----------------- */
@@ -88,28 +89,41 @@ main {
 .profile {
   margin-top: 1.5rem;
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem; /* un poco más de espacio para avatar grande */
   align-items: flex-start;
   background: #242424;
   padding: 1.5rem;
   border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* animación al pasar */
+}
+
+.profile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(255,59,59,0.5);
 }
 
 .avatar {
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: #444;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.8rem;
+  font-size: 4rem;
   color: #ccc;
   user-select: none;
   overflow: hidden;
   border: 2px solid #555;
   flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(255,59,59,0.7);
+  border: 2px solid #ff3b3b;
 }
 
 .avatar img {
@@ -122,13 +136,13 @@ main {
 .profile-info {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.5rem;
   flex-grow: 1;
   align-items: flex-start;
 }
 
 .profile-name {
-  font-size: 2.3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #ff6b6b;
 }
@@ -143,8 +157,9 @@ main {
   width: 100%;
   text-align: left;
   word-wrap: break-word;
+  margin-top: 0.5rem;
+  transition: transform 0.3s ease;
 }
-
 /* ----------------- FORM ----------------- */
 form {
   display: flex;
@@ -190,6 +205,8 @@ textarea:focus {
   box-shadow: 0 0 10px #ff3b3b;
 }
 
+
+
 /* ----------------- BUTTONS ----------------- */
 button {
   background: #ff3b3b;
@@ -199,14 +216,15 @@ button {
   font-weight: 700;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   font-size: 1.1rem;
   box-shadow: 0 3px 7px rgba(255,59,59,0.7);
 }
 
 button:hover {
   background: #e63946;
-  box-shadow: 0 4px 12px rgba(255,59,59,0.85);
+  box-shadow: 0 5px 15px rgba(255,59,59,0.85);
+  transform: translateY(-2px);
 }
 
 .cancel-btn {
@@ -220,6 +238,7 @@ button:hover {
   box-shadow: 0 4px 12px rgba(255,59,59,0.5);
 }
 
+
 #logout-btn {
   background-color:#111;
   box-shadow: 0 3px 7px rgba(192,57,43,0.7);
@@ -230,6 +249,33 @@ button:hover {
   box-shadow: 0 4px 12px rgba(231,76,60,0.85);
 }
 
+#profile-form button {
+  background: #ff3b3b;
+  border: none;
+  padding: 0.9rem 1rem;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  font-size: 1.1rem;
+  box-shadow: 0 3px 7px rgba(255,59,59,0.7);
+}
+#profile-form button:hover {
+  background: #e63946;
+  box-shadow: 0 5px 15px rgba(255,59,59,0.85);
+  transform: translateY(-2px);
+}
+#profile-form .cancel-btn {
+  background: #555;
+  margin-top: 0.5rem;
+  box-shadow: 0 3px 7px rgba(200,0,0,0.5);
+}
+#profile-form .cancel-btn:hover {
+  background: #777;
+  box-shadow: 0 4px 12px rgba(255,59,59,0.5);
+}
+
 /* ----------------- POPUPS ----------------- */
 .popup-overlay {
   position: fixed;
@@ -237,7 +283,7 @@ button:hover {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.75);
-  z-index: 9998;
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -269,37 +315,72 @@ button:hover {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-#popup-success {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #00b894;
-  color: white;
-  padding: 14px 24px;
-  border-radius: 10px;
-  font-weight: bold;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  display: none;
-  z-index: 9999;
-  animation: fadeInOut 0.5s ease-in-out;
+.avatar-edit {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #555;
+  margin: 0 auto 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.avatar-edit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.avatar-edit:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255,59,59,0.7);
+}
+
+.popup-overlay.show {
+  display: flex;
+}
+
+#profile-form input[type="text"] {
+  padding: 0.6rem 0.5rem;
+  border-radius: 12px;
+  border: 1.5px solid #ff3b3b;
+  background: #111;
+  color: #fff;
   font-size: 1rem;
-  text-align: center;
-  min-width: 220px;
+  transition: all 0.3s ease;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translate(-50%, 30px); }
-  10% { opacity: 1; transform: translate(-50%, 0); }
-  90% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%, 30px); }
+#profile-form input[type="text"]:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 10px #ff3b3b;
+  outline: none;
+}
+
+#profile-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1.5px solid #ff3b3b;
+  box-shadow: inset 0 2px 5px rgba(255,59,59,0.2);
+  background: #111;
+  color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+#profile-form textarea:focus {
+  border-color: #ff3b3b;
+  outline: none;
+  box-shadow: 0 0 10px #ff3b3b;
 }
 
 #popup-success {
   position: fixed;
   bottom: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(0.8);
   background: #e63946;
   color: white;
   padding: 14px 24px;
@@ -308,12 +389,77 @@ button:hover {
   box-shadow: 0 2px 10px rgba(255,59,59,0.5);
   display: none;
   z-index: 9999;
-  animation: fadeInOut 0.5s ease-in-out;
+  animation: fadeInOut 1s ease-in-out forwards;
   font-size: 1rem;
+
   text-align: center;
   min-width: 220px;
 }
 
+@keyframes fadeInOut {
+  0% {
+    transform: translateX(-50%) translateY(40px) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(-50%) translateY(-5px) scale(1.05);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(-50%) translateY(-2px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(40px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+
+
+#popup-success {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: #e63946;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(255,59,59,0.5);
+  display: none;
+  z-index: 9999;
+  animation: fadeInOut 1s ease-in-out forwards;
+  font-size: 1rem;
+
+  text-align: center;
+  min-width: 220px;
+}
+
+/* Animación de cierre del popup */
+.popup.closing {
+  animation: popup-fadeout 0.4s ease forwards;
+}
+
+@keyframes popup-fadeout {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+
+
+    
 /* ----------------- PANEL ADMINISTRADOR ----------------- */
 #owner-panel, #admin-panel {
   margin: 2rem auto;
@@ -384,7 +530,7 @@ button:hover {
   top: 0; left: 0;
   width: 100%; height: 100%;
   pointer-events: none;          /* no bloquea clics por defecto */
-  z-index: 3000;
+  z-index: 10; 
   overflow: hidden;
   background: rgba(0,0,0,0.7);   /* más opaco para destacar */
   display: none;                  /* oculto por defecto */
@@ -456,7 +602,6 @@ button:hover {
 }
 
 
-
 .popup {
   background: #2b2b2b;
   border-radius: 20px;
@@ -475,4 +620,10 @@ button:hover {
 @keyframes popup-fadein {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatText {
+  0% { transform: translateY(-20px); opacity: 0; }
+  50% { transform: translateY(10px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
 }

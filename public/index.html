@@ -1,108 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>InforDle - Información y Tarjetas</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header class="header">
-      <a href="http://127.0.0.1:5500/public/login.html" class="logo">Iniciar Sesión</a>
-      <i class="bx bx-menu" id="menu-icon"></i>
-      <nav class="navbar">
-        <a href="#home">Home</a>
-        <a href="#informacion">Información</a>
-        <a href="#soporte">Soporte</a>
-        <a href="#creditos">Créditos</a>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>InforDle</title>
 
-    <section class="home" id="home">
-      <div class="home-content">
-        <h1>Bienvenido a InforDle</h1>
-        <h3 class="typing-text">Estamos para <span class="span"></span></h3>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae reprehenderit aliquid numquam quasi quam amet
-          ipsum itaque omnis, voluptatem neque assumenda! Quas vero cupiditate consectetur ullam? Voluptatibus tenetur cum
-          quidem.
-        </p>
-      </div>
-    </section>
+  
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
-    <!-- Sección Información (Cuadros funcionales) -->
-    <section id="informacion" class="informacion-section">
-      <h2 class="informacion-title">Información InforDle</h2>
-      <div class="informacion-content" id="informacion-content">
-        <!-- Cuadros se agregarán aquí dinámicamente -->
-      </div>
-      <button id="add-info-btn" class="btn-add">Agregar Información</button>
-    </section>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-    <section class="general" id="soporte">
-      <div class="general-1">
-        <h2>Soporte</h2>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores fuga voluptate quasi doloremque
-          voluptatem consequuntur nisi commodi illum quibusdam sapiente, eum laborum repellat nam numquam, dolor
-          culpa quos inventore soluta?
-        </p>
-        <a href="#" class="btn-4">Contactar Soporte</a>
-      </div>
-      <div class="general-2">
-        <img
-          id="prueba"
-          alt="Soporte Imagen"
-          src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png"
-          title="Soporte InforDle"
-        />
-      </div>
-    </section>
+  <header class="header">
+    <div id="user-info">
+      <a href="login.html" class="logo">Iniciar Sesión</a>
+    </div>
+    <i class="bx bx-menu" id="menu-icon"></i>
+    <nav class="navbar">
+      <a href="#home">Home</a>
+      <a href="#informacion">Información</a>
+      <a href="#soporte">Soporte</a>
+      <a href="#creditos">Créditos</a>
+    </nav>
+  </header>
 
-    <!-- Créditos con tarjetas sin valoración, con rol, descripción e imagen -->
-    <section class="creditos" id="creditos">
-      <h2 class="creditos-title">Créditos</h2>
-      <div class="tarjetas-container" id="tarjetas-container">
-        <div class="tarjeta" tabindex="0" style="top: 20px; left: 40px;">
-          <div class="tarjeta-contenido">
-            <img src="images/lucas.jpg" alt="Lucas Franklin" class="tarjeta-img" />
-            <h3>Lucas Franklin</h3>
-            <p class="rol">Blogger</p>
-            <p class="descripcion">
-              Escribe contenido especializado en tecnología y educación para ayudar a la comunidad.
-            </p>
-            <button class="btn-view">Ver Más</button>
-          </div>
+
+
+  <section class="home" id="home">
+    <div class="home-content">
+      <h1>Bienvenido a InforDle</h1>
+      <h3 class="typing-text">Estamos para <span class="span"></span></h3>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae reprehenderit
+        aliquid numquam quasi quam amet ipsum itaque omnis, voluptatem neque assumenda!
+        Quas vero cupiditate consectetur ullam? Voluptatibus tenetur cum quidem.
+      </p>
+    </div>
+  </section>
+
+  <section id="informacion" class="informacion-section">
+    <h2 class="informacion-title">Información InforDle</h2>
+    <div class="informacion-content" id="informacion-content">
+
+    </div>
+    <button id="add-info-btn" class="btn-add">Agregar Información</button>
+  </section>
+
+  <section class="general" id="soporte">
+    <div class="general-1">
+      <h2>Soporte</h2>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores fuga voluptate
+        quasi doloremque voluptatem consequuntur nisi commodi illum quibusdam sapiente, eum
+        laborum repellat nam numquam, dolor culpa quos inventore soluta?
+      </p>
+      <a href="#" class="btn-4">Contactar Soporte</a>
+    </div>
+    <div class="general-2">
+      <img
+        id="prueba"
+        loading="lazy"
+        alt="Soporte Imagen"
+        src="https://cdn-icons-png.flaticon.com/512/2462/2462719.png"
+        title="Soporte InforDle"
+      />
+    </div>
+  </section>
+
+  <section class="creditos" id="creditos">
+    <h2 class="creditos-title">Créditos</h2>
+    <div class="tarjetas-container" id="tarjetas-container">
+
+      <div class="tarjeta" tabindex="0" style="top: 20px; left: 40px;">
+        <div class="tarjeta-contenido">
+          <img src="images/owner.jpg" alt="Lucas Franklin" class="tarjeta-img" loading="lazy" />
+          <h3>Lucas Franklin</h3>
+          <p class="rol">Blogger</p>
+          <p class="descripcion">
+            Escribe contenido especializado en tecnología y educación para ayudar a la comunidad.
+          </p>
+          <button class="btn-view">Ver Más</button>
         </div>
-
-        <div class="tarjeta" tabindex="0" style="top: 100px; left: 260px;">
-          <div class="tarjeta-contenido">
-            <img src="images/flora.jpg" alt="Flora Ocean" class="tarjeta-img" />
-            <h3>Flora Ocean</h3>
-            <p class="rol">Desarrolladora Web</p>
-            <p class="descripcion">
-              Especialista en diseño y desarrollo front-end con experiencia en proyectos innovadores.
-            </p>
-            <button class="btn-view">Ver Más</button>
-          </div>
-        </div>
-
-        <div class="tarjeta" tabindex="0" style="top: 200px; left: 480px;">
-          <div class="tarjeta-contenido">
-            <img src="images/john.jpg" alt="John Kendric" class="tarjeta-img" />
-            <h3>John Kendric</h3>
-            <p class="rol">YouTuber</p>
-            <p class="descripcion">
-              Creador de contenido audiovisual sobre tecnología, tutoriales y reseñas.
-            </p>
-            <button class="btn-view">Ver Más</button>
-          </div>
-        </div>
-        <!-- Puedes agregar más tarjetas aquí -->
       </div>
-    </section>
 
-    <script src="script.js"></script>
-  </body>
+ 
+      <div class="tarjeta" tabindex="0" style="top: 100px; left: 260px;">
+        <div class="tarjeta-contenido">
+          <img src="images/owner.jpg" alt="Flora Ocean" class="tarjeta-img" loading="lazy" />
+          <h3>Flora Ocean</h3>
+          <p class="rol">Desarrolladora Web</p>
+          <p class="descripcion">
+            Especialista en diseño y desarrollo front-end con experiencia en proyectos innovadores.
+          </p>
+          <button class="btn-view">Ver Más</button>
+        </div>
+      </div>
+
+
+      <div class="tarjeta" tabindex="0" style="top: 200px; left: 480px;">
+        <div class="tarjeta-contenido">
+          <img src="images/owner.jpg" alt="John Kendric" class="tarjeta-img" loading="lazy" />
+          <h3>John Kendric</h3>
+          <p class="rol">YouTuber</p>
+          <p class="descripcion">
+            Creador de contenido audiovisual sobre tecnología, tutoriales y reseñas.
+          </p>
+          <button class="btn-view">Ver Más</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js" defer></script>
+</body>
 </html>
