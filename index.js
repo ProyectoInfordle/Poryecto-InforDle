@@ -19,12 +19,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuración de sesión
+
 app.use(session({
-  secret: '9b1d62c3e0b4f157d6a8e9a23c2f9a9a776b5a0ef6f4e91c5b6c0a9a1d2e3f4a',  // cambia a un string seguro
+  secret: '9b1d62c3e0b4f157d6a8e9a23c2f9a9a776b5a0ef6f4e91c5b6c0a9a1d2e3f4a',  
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }  // si usas https aquí va true
+  cookie: { secure: false }  
 }));
 
 const upload = multer({
@@ -104,7 +104,7 @@ app.post('/api/users/logout', (req, res) => {
 });
 
 
-// --- GET usuario logueado con rol ---
+
 app.get('/api/auth/user', (req, res) => {
   if (!req.session.user)
     return res.status(401).json({ success: false, message: 'No hay usuario logueado' });
@@ -200,7 +200,7 @@ app.post('/api/profile/:username', upload.single('avatar'), (req, res) => {
   });
 });
 
-// --- Rutas API primero ---
+
 app.get('/api/users/all', (req, res) => {
   if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
 
@@ -211,11 +211,11 @@ app.get('/api/users/all', (req, res) => {
   });
 });
 
-// --- Luego archivos estáticos ---
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// Cambiar rol de usuario
+
 app.post('/api/users/:username/change-role', (req, res) => {
   if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
 
@@ -235,7 +235,7 @@ app.post('/api/users/:username/change-role', (req, res) => {
   });
 });
 
-// Eliminar usuario
+
 app.delete('/api/users/:username', (req, res) => {
   if (!req.session.user) return res.status(401).json({ success: false, message: 'No autorizado' });
 
@@ -259,3 +259,4 @@ app.delete('/api/users/:username', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
+
